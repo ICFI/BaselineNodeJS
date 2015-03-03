@@ -1,7 +1,17 @@
 var express = require('express');
-var app = express();
+var helmet = require('helmet');
+var csrf = require('csurf');
+
 var shutting_down = false;
 var server = null;
+var app = express();
+app.disable("x-powered-by");
+app.use(session({
+    secret: "Kuj6Gf",
+    key: "sessionId",
+}));
+
+app.use(csrf());
 
 app.use(function (req, resp, next) {
  if(!shutting_down)
