@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var helmet = require('helmet');
 var csrf = require('csurf');
 
@@ -9,6 +10,8 @@ app.disable("x-powered-by");
 app.use(session({
     secret: "Kuj6Gf",
     key: "sessionId",
+    saveUninitialized: true,
+    resave: true,
 }));
 
 app.use(csrf());
