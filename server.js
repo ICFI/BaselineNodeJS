@@ -5,7 +5,12 @@ var csrf = require('csurf');
 
 var shutting_down = false;
 var server = null;
+var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 var app = express();
+app.set('views', __dirname + '/server/views');
+app.set('view engine', 'jade');
+
 app.disable("x-powered-by");
 
 app.use(session({
@@ -13,6 +18,7 @@ app.use(session({
     key: "sessionId",
     saveUninitialized: true,
     resave: true,
+    cookie: { secure: true }
 }));
 
 //app.use(csrf());
@@ -30,9 +36,8 @@ app.use(function (req, resp, next) {
 app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOST || '0.0.0.0');
 
-app.get('/', function (req, res) {
-    var curTime = new Date().getTime();
-  res.send('Good morning ICF! ' + curTime);
+app.get('*', function (req, res) {
+   res.render('index');
 });
 
 
