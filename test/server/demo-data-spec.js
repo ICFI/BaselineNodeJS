@@ -6,12 +6,12 @@ var demoData = require("../../server/data/demo-data.js");
 
 function resetStuff() {
     return new Promise( function (resolve, reject) {
-        mongoose.connection.collections["Demo"].drop(resolve, reject);
+        mongoose.connection.collections["demos"].drop(resolve, reject);
     })
 }
 
 describe("db demo data", function() {
-  /*  
+ 
     var stuff;
     
     before(function(done){
@@ -28,7 +28,7 @@ describe("db demo data", function() {
     after(function(){
         mongoose.connection.close();
     });
-    
+
     it("should never be empty since jobs are seeded", function() {
         expect(stuff.length).to.be.at.least(1);
     });
@@ -40,8 +40,7 @@ describe("db demo data", function() {
     it("should have a job with a description", function(){
         expect(stuff[0].description).to.not.be.empty;
     });
-    */
-    /**/
+
      it("should never be empty since demo data are seeded");
      it("should always have a title");
     
