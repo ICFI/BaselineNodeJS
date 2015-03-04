@@ -15,7 +15,7 @@ app.disable("x-powered-by");
     resave: true,
 }));*/
 
-app.use(csrf());
+//app.use(csrf());
 
 app.use(function (req, resp, next) {
  if(!shutting_down)
