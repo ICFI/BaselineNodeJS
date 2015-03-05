@@ -7,3 +7,4 @@ Heroku, GitHub and CodeShip.  The prototype environment leverages an AWS ec2
 instance replacing Heroku as the app server. 
 
 Integrated CodeShip. Testing build
+Integrated CodeShip continuous deployment with Heroku.
