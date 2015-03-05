@@ -2,7 +2,7 @@ var expect = require("chai").expect;
 var mongoose = require('mongoose');
 var jobModel = require('../../server/models/Demo');
 var Promise = require("bluebird");
-var demoData = require("../../server/data/demo-data.js");
+var demoData = require("../../server/domain/demo-data.js");
 
 function resetStuff() {
     return new Promise( function (resolve, reject) {

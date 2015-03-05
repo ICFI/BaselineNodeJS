@@ -4,7 +4,7 @@ var helmet = require('helmet');
 var csrf = require('csurf');
 var stylus = require('stylus');
 var demoModel = require('./server/models/Demo');
-var demoData = require("./server/data/demo-data.js");
+var demoData = require("./server/domain/demo-data.js");
 
 //local variable declaration
 var shutting_down = false;
