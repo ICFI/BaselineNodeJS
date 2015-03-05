@@ -3,13 +3,20 @@ var session = require('express-session');
 var helmet = require('helmet');
 var csrf = require('csurf');
 var stylus = require('stylus');
+var demoModel = require('./server/models/Demo');
+var demoData = require("./server/data/demo-data.js");
 
+//local variable declaration
 var shutting_down = false;
 var server = null;
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
+require('./server/services/demo-service.js')(demoData, app);
 
+
+
+//stylus compiler
 function compile(str, path) {
     return stylus(str).set('filename', path);
 }
@@ -52,6 +59,13 @@ app.get('*', function (req, res) {
    res.render('index');
 });
 
+//need to move to protect the secrets
+//mongoose.connect('mongodb://localhost/generic_node');
+demoData.connectDb('mongodb://icfproto:Ug7ZmdXK@ds051831.mongolab.com:51831/generic_node')
+.then(function() {
+    console.log('connected to mongodb successfully!');
+    demoData.seedStuff();
+});
 
 server = app.listen(app.get('port'), app.get('host'), function () {
  
