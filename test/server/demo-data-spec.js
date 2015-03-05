@@ -10,7 +10,10 @@ function resetStuff() {
     })
 }
 
-describe("db demo data", function() {
+// mongodb://<dbuser>:<dbpassword>@ds051831.mongolab.com:51831/generic_node
+//mongodb://localhost/generic_node
+
+describe("db demo data test", function() {
  
     var stuff;
     
@@ -29,38 +32,36 @@ describe("db demo data", function() {
         mongoose.connection.close();
     });
 
-    it("should never be empty since jobs are seeded", function() {
+    it("should never be empty since demo data are seeded", function() {
         expect(stuff.length).to.be.at.least(1);
     });
     
-    it("should have a job with a title", function(){
+    it("should have a demo data (stuff) with a title", function(){
         expect(stuff[0].title).to.not.be.empty;
     });
     
-    it("should have a job with a description", function(){
+    it("should have a demo data (stuff) with a description", function(){
         expect(stuff[0].description).to.not.be.empty;
     });
 
-     it("should never be empty since demo data are seeded");
-     it("should always have a title");
     
 });
 
-describe("db save jobs", function(){
-    var job = {title:'Demo Title', description:'This is a mock record'};
-    var jobs;
-/*    
-    function saveTestJob() {
-        return jobsData.saveJob(job);
+describe("db save demo data (aka stuff)", function(){
+    var stuff = {title:'Demo Title', description:'This is a mock record'};
+    var stuffs;
+    
+    function saveTestStuff() {
+        return demoData.saveStuff(stuff);
     }
     
     before(function(done) {
-         jobsData.connectDb('mongodb://localhost/jobfinder')
-        .then(resetJobs)
-        .then(function() { return jobsData.saveJob(job)})
-        .then(jobsData.findJobs)
-        .then(function setJobs(collection) {
-            jobs=collection;
+         demoData.connectDb('mongodb://localhost/generic_node')
+        .then(resetStuff)
+        .then(function() { return demoData.saveStuff(stuff)})
+        .then(demoData.findStuff)
+        .then(function setStuff(collection) {
+            stuffs=collection;
             done();
         });         
     });
@@ -69,10 +70,22 @@ describe("db save jobs", function(){
         mongoose.connection.close();
     });
     
-    it("should have one job after saving one job", function() {
-       expect(jobs).to.have.length(1); 
+    it("should have one demo data (aka stuff) after saving one object", function() {
+       expect(stuffs).to.have.length(1); 
     });
-    */
-    
-    it("should have one item after saving one demo record");
+
+});
+
+describe("db get demo data (aka stuff)", function(){
+    it("should be able to get a single record");
+    it("should be able to get a list of all records");
+    it("should be able to get a list of records based on criteria");
+});
+
+describe("db update demo data (aka stuff)", function(){
+    ("it should be able to change the data of a single record and save to the database");
+});
+
+describe("db delete demo data (aka stuff)", function(){
+    ("it should be able to change the data of a single record and save to the database");
 });
