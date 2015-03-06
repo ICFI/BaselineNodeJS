@@ -2,19 +2,23 @@
 
 (function () {
     'use strict';
-    var directiveOne = function ($log) {
+    var searchCriteriaItem = function () {
             return {
                 restrict    : 'A',
                 replace     : false,
-                scope       : true,
-                link        : function () {
-                    $log.info('test');
+                template    : '{{key}}: {{value}} <button type="button" class="close" aria-label="Close" ng-click="handleClick(criteria)")><span aria-hidden="true"> &times;</span></button>',
+                scope       : {
+                    handleClick : '&',
+                    key         : '@',
+                    value       : '@'
+                },
+                link : function (scope) {
+                    console.log('hi', scope);
                 }
             };
         };
 
-    angular.module('app').directive('directiveOne', [
-        '$log',
-        directiveOne
+    angular.module('app').directive('searchCriteriaItem', [
+        searchCriteriaItem
     ]);
 }());
