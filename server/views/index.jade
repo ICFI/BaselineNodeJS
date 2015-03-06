@@ -2,23 +2,39 @@ doctype
 html
     head
         link(rel='stylesheet', href='/scripts/bootstrap/dist/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/css/global.css')
     body(ng-app='app')
-        .container
-            div(ng-controller='demoCtrl')
-                h1 Post a Item
-                form(ng-submit="submit()")
-                    .form-group
-                        input.form-control(placeholder="Title" ng-model="title")
-                    .form-group
-                        textarea.form-control(placeholder="Description" ng-model="description")
-                    .form-group
-                        button.btn.btn-primary(type="submit") Post
-                h1 List of current items
-                .list-group
-                    a.list-group-item(href='#' ng-repeat="item in demoData")
-                        h4.list-group-item-heading {{ item.title }}
-                        p.list-group-item-text {{ item.description }}
-    
+        main.container(ng-controller='demoCtrl')
+            h1 Small Business Lenders
+            .row
+                .well
+                    form(ng-submit="submit()")
+                        legend Search
+                        .form-group
+                            label(for="assistance") Assistance
+                            select.form-control(ng-model="assistance" id="assistance" ng-options="option.name for option in assistanceOptions")
+                        .form-group
+                            label(for="industry") Industry
+                            select.form-control(ng-model="industry" ng-disabled="assistance.value == assistanceOptions[0].value" id="industry" ng-options="option.name for option in industryOptions")
+                        .form-group
+                            label(for="state") State
+                            select.form-control(placeholder="Description" ng-disabled="industry.value == industryOptions[0].value" ng-model="state" id="state" ng-options="option.name for option in stateOptions")
+                        button.btn.btn-primary(type="submit" ng-disabled="assistance.value == assistanceOptions[0].value") Get Results
+            .row
+                h2 Results for:
+                    small
+                        span.label.label-primary(ng-repeat="criteria in searchCriteria" data-handleClick="removeCriteria(criteria)" data-key="{{criteria.key}}" data-value="{{criteria.value}}" data-search-criteria-item="data-search-criteria-item")
+
+                table.table(ng-if="searchResults.length > 0")
+                    thead
+                        tr
+                            th Title
+                            th Source
+                            th State
+                    tbody
+                p.bg-info(ng-if="searchCriteria.length === 0") Use the search form above to find Small Business Lenders
+                p.bg-info(ng-if="searchCriteria.length !== 0 && searchResults.length === 0") Your search yielded no results.
+
     script(src='/scripts/angular/angular.js')
     script(src='/scripts/angular-resource/angular-resource.js')
     script(src='/app/app.js')
