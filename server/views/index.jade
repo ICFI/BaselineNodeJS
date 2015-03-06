@@ -15,11 +15,14 @@ html
                         button.btn.btn-primary(type="submit") Post
                 h1 List of current items
                 .list-group
-                    a.list-group-item(href='#')(ng-repeat="item in demoData")
+                    a.list-group-item(href='#' ng-repeat="item in demoData")
                         h4.list-group-item-heading {{ item.title }}
                         p.list-group-item-text {{ item.description }}
     
-    script(type='text/javascript', src='/scripts/angular/angular.js')
-    script(type='text/javascript', src='/scripts/angular-resource/angular-resource.js')
-    script(type='text/javascript', src='/app/app.js')
-    script(type='text/javascript', src='/app/factories.js')
+    script(src='/scripts/angular/angular.js')
+    script(src='/scripts/angular-resource/angular-resource.js')
+    script(src='/app/app.js')
+    script(src='/app/config.js')
+    script(src='/app/factories.js')    
+    script(src='/app/controllers.js')
+    script(src='/app/directives.js')

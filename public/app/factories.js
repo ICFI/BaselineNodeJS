@@ -1,3 +1,15 @@
-app.factory('demoData', ['$resource', function($resource){
-    return $resource('/api/v1/demo/');
-}])
+/*globals angular */
+
+(function () {
+    'use strict';
+
+    var demoData = function ($resource, dataPaths) {
+        return $resource(dataPaths.demo);
+    };
+
+    angular.module('app').factory('demoData', [
+        '$resource',
+        'dataPaths',
+        demoData
+    ]);
+}());

@@ -13,8 +13,8 @@
             };
         };
 
-    angular.module('app').directive('directiveOne',
-        [
-            '$log'
-        ], directiveOne);
+    angular.module('app').directive('directiveOne', [
+        '$log',
+        directiveOne
+    ]);
 }());
