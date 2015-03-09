@@ -1,5 +1,6 @@
 var express = require('express');
 var session = require('express-session');
+var cookieParser = require('cookie-parser')
 var helmet = require('helmet');
 var csrf = require('csurf');
 var stylus = require('stylus');
@@ -14,7 +15,7 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var app = express();
 require('./server/services/demo-service.js')(demoData, app);
 
-
+var csrfProtection = csrf({ cookie: true })
 
 //stylus compiler
 function compile(str, path) {
@@ -40,7 +41,7 @@ app.use(session({
     cookie: { secure: true }
 }));
 
-//app.use(csrf());
+app.use(csrf());
 
 app.use(function (req, resp, next) {
  if(!shutting_down)
@@ -56,7 +57,8 @@ app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOST || '0.0.0.0');
 
 app.get('*', function (req, res) {
-   res.render('index');
+    res.setHeader("csrf-token", req.csrfToken());
+   res.render('index', { csrfToken: req.csrfToken()});
 });
 
 //need to move to protect the secrets

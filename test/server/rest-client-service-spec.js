@@ -33,14 +33,14 @@ var searchuri = {
       });
    },
 };
-/*
-var elasticService = require("../../server/services/elasticsearch-service")(searchuri, app);
+
+var elasticService = require("../../server/services/rest-client-service")(searchuri, app);
 
 
 
-describe("elasticsearch service search", function() {
+describe("rest-client service search", function() {
    it("should search the remote server returning a result as an array", function(done){
-   request(app).get('/api/v1/search')
+   request(app).get('/api/v1/essearch')
    .expect('Content-Type', /json/)
    .end(function(err, res){
       expect(res.body).to.be.a('Array');
@@ -49,4 +49,3 @@ describe("elasticsearch service search", function() {
    });
 });
 
-*/
