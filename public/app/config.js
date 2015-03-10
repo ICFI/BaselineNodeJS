@@ -4,7 +4,7 @@
     'use strict';
 
     var dataPaths = {
-        'demo'  : '/api/v1/demo/'
+        'businessLenderURI'  : '/api/v1/demo/'
     };
 
     angular.module('app').constant('dataPaths', dataPaths);

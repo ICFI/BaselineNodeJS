@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    var DemoCtrl = function ($scope, $resource, demoData, dataPaths) {
+    var DemoCtrl = function ($scope, $resource, businessLenderData, dataPaths) {
         var assistanceOptions = [
                 {
                     'name'  : 'Select Assistance Type',
@@ -106,8 +106,7 @@
                 $scope.searchData = data;
             },
             removeCriteria = function (criteria) {
-                console.log('criteria');
-                switch (criteria) {
+                switch (criteria.index) {
                 case 'assistance':
                     $scope.assistance = assistanceOptions[0];
                     break;
@@ -118,14 +117,17 @@
                     $scope.state = stateOptions[0];
                     break;
                 }
+
+                $scope.submit();
             };
 
         $scope.searchCriteria    = [];
         $scope.searchData        = {};
-        $scope.$watch('searchData', function (newSearch) {
-            console.log(newSearch);
-            if (newSearch.assistance) {
+        $scope.searchResults     = [];
 
+        $scope.$watch('searchData', function (newSearch) {
+            if (newSearch.assistance) {
+                
             }
         });
 
@@ -147,7 +149,7 @@
     angular.module('app').controller('demoCtrl', [
         '$scope',
         '$resource',
-        'demoData',
+        'businessLenderData',
         'dataPaths',
         DemoCtrl
     ]);
