@@ -3,13 +3,13 @@
 (function () {
     'use strict';
 
-    var demoData = function ($resource, dataPaths) {
-        return $resource(dataPaths.demo);
-    };
+    var businessLenderData = function ($resource, dataPaths) {
+            return $resource(dataPaths.businessLenderURI);
+        };
 
-    angular.module('app').factory('demoData', [
+    angular.module('app').factory('businessLenderData', [
         '$resource',
         'dataPaths',
-        demoData
+        businessLenderData
     ]);
 }());
