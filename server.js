@@ -1,10 +1,11 @@
 var express = require('express');
 var session = require('express-session');
+var cookieParser = require('cookie-parser')
 var helmet = require('helmet');
 var csrf = require('csurf');
-var stylus = require('stylus');
 var demoModel = require('./server/models/Demo');
 var demoData = require("./server/domain/demo-data.js");
+var serviceData = require("./server/domain/rest-client-data.js");
 
 //local variable declaration
 var shutting_down = false;
@@ -13,21 +14,14 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
 require('./server/services/demo-service.js')(demoData, app);
+require('./server/services/rest-client-service.js')(serviceData, app);
 
-
-
-//stylus compiler
-function compile(str, path) {
-    return stylus(str).set('filename', path);
-}
+var csrfProtection = csrf({ cookie: true })
 
 app.set('views', __dirname + '/server/views');
 app.set('view engine', 'jade');
 
-app.use(stylus.middleware({
-    src: __dirname + '/public',
-    compile: compile
-}));
+
 
 app.use(express.static(__dirname + '/public'));
 
@@ -40,7 +34,7 @@ app.use(session({
     cookie: { secure: true }
 }));
 
-//app.use(csrf());
+app.use(csrf());
 
 app.use(function (req, resp, next) {
  if(!shutting_down)
@@ -56,7 +50,8 @@ app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOST || '0.0.0.0');
 
 app.get('*', function (req, res) {
-   res.render('index');
+    res.setHeader("csrf-token", req.csrfToken());
+   res.render('index', { csrfToken: req.csrfToken()});
 });
 
 //need to move to protect the secrets

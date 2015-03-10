@@ -33,6 +33,7 @@ describe("db demo data test", function() {
     });
 
     it("should never be empty since demo data are seeded", function() {
+        stuff.length
         expect(stuff.length).to.be.at.least(1);
     });
     

@@ -3,10 +3,10 @@ var app = express();
 var expect = require("chai").expect;
 var request = require("supertest");
 var Promise = require("bluebird");
-/*
-evaluating need due to use of generic rest client
+var bodyParser = require("body-parser");
+
 var searchuri = {
-   dosearch: function(){
+   doSearch: function(){
       return new Promise( function(resolve, reject) {
          resolve([{"took":4,"timed_out":false,"_shards":{"total":1,"successful":1,"failed":0},"hits":{"total":1,"max_score":0.6793474,"hits":[{"_index":"sba","_type":"sba_state","_id":"AUvmMVcaL8y6AC8FYJt-","_score":0.6793474,"_source":
   {
@@ -35,13 +35,13 @@ var searchuri = {
    },
 };
 
-var elasticService = require("../../server/services/elasticsearch-service")(searchuri, app);
+var elasticService = require("../../server/services/rest-client-service")(searchuri, app);
 
 
 
-describe("elasticsearch service search", function() {
+describe("rest-client service search", function() {
    it("should search the remote server returning a result as an array", function(done){
-   request(app).get('/api/v1/search')
+   request(app).get('/api/v1/essearch')
    .expect('Content-Type', /json/)
    .end(function(err, res){
       expect(res.body).to.be.a('Array');
@@ -50,4 +50,3 @@ describe("elasticsearch service search", function() {
    });
 });
 
-*/
