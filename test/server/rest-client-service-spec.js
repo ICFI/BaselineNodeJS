@@ -3,9 +3,10 @@ var app = express();
 var expect = require("chai").expect;
 var request = require("supertest");
 var Promise = require("bluebird");
+var bodyParser = require("body-parser");
 
 var searchuri = {
-   dosearch: function(){
+   doSearch: function(){
       return new Promise( function(resolve, reject) {
          resolve([{"took":4,"timed_out":false,"_shards":{"total":1,"successful":1,"failed":0},"hits":{"total":1,"max_score":0.6793474,"hits":[{"_index":"sba","_type":"sba_state","_id":"AUvmMVcaL8y6AC8FYJt-","_score":0.6793474,"_source":
   {

@@ -1,6 +1,7 @@
 var elasticsearch = require('elasticsearch');
 var Promise = require("bluebird");
-
+/*  evaluating need based on use of generic rest client */
+/*
 
 
 
@@ -47,4 +48,4 @@ exports.doSearch = function(client, queryparams){
     }, function (error) {
       return error.message;
     });
-}
+}*/

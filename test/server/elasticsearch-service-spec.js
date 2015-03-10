@@ -3,7 +3,8 @@ var app = express();
 var expect = require("chai").expect;
 var request = require("supertest");
 var Promise = require("bluebird");
-
+/*
+evaluating need due to use of generic rest client
 var searchuri = {
    dosearch: function(){
       return new Promise( function(resolve, reject) {
@@ -33,7 +34,7 @@ var searchuri = {
       });
    },
 };
-/*
+
 var elasticService = require("../../server/services/elasticsearch-service")(searchuri, app);
 
 

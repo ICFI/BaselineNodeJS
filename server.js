@@ -3,9 +3,9 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser')
 var helmet = require('helmet');
 var csrf = require('csurf');
-var stylus = require('stylus');
 var demoModel = require('./server/models/Demo');
 var demoData = require("./server/domain/demo-data.js");
+var serviceData = require("./server/domain/rest-client-data.js");
 
 //local variable declaration
 var shutting_down = false;
@@ -14,21 +14,14 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
 require('./server/services/demo-service.js')(demoData, app);
+require('./server/services/rest-client-service.js')(serviceData, app);
 
 var csrfProtection = csrf({ cookie: true })
-
-//stylus compiler
-function compile(str, path) {
-    return stylus(str).set('filename', path);
-}
 
 app.set('views', __dirname + '/server/views');
 app.set('view engine', 'jade');
 
-app.use(stylus.middleware({
-    src: __dirname + '/public',
-    compile: compile
-}));
+
 
 app.use(express.static(__dirname + '/public'));
 
