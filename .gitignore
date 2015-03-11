@@ -1,4 +1,5 @@
 .c9
+*.log
 data
 node_modules
 install_bower_packages.sh
