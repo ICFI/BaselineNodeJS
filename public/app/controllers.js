@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    var DemoCtrl = function ($scope, $resource, businessLenderData, dataPaths) {
+    var DemoCtrl = function ($scope, businessLenderData) {
         var assistanceOptions = [
                 {
                     'name'  : 'Select Assistance Type',
@@ -127,7 +127,7 @@
 
         $scope.$watch('searchData', function (newSearch) {
             if (newSearch.assistance) {
-                
+                businessLenderData.query($scope.searchData);
             }
         });
 
@@ -148,9 +148,7 @@
 
     angular.module('app').controller('demoCtrl', [
         '$scope',
-        '$resource',
         'businessLenderData',
-        'dataPaths',
         DemoCtrl
     ]);
 }());
