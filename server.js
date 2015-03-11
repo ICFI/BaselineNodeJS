@@ -5,7 +5,7 @@ var helmet = require('helmet');
 var csrf = require('csurf');
 var demoModel = require('./server/models/Demo');
 var demoData = require("./server/domain/demo-data.js");
-var serviceData = require("./server/domain/rest-client-data.js");
+var searchProxy = require("./server/domain/rest-client-data.js");
 
 //local variable declaration
 var shutting_down = false;
@@ -14,7 +14,7 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
 require('./server/services/demo-service.js')(demoData, app);
-require('./server/services/rest-client-service.js')(serviceData, app);
+require('./server/services/rest-client-service.js')(searchProxy, app);
 
 var csrfProtection = csrf({ cookie: true })
 
