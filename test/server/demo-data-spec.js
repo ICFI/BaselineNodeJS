@@ -12,7 +12,7 @@ function resetStuff() {
 
 // mongodb://<dbuser>:<dbpassword>@ds051831.mongolab.com:51831/generic_node
 //mongodb://localhost/generic_node
-
+/*
 describe("db demo data test", function() {
  
     var stuff;
@@ -47,7 +47,8 @@ describe("db demo data test", function() {
 
     
 });
-
+*/
+/*
 describe("db save demo data (aka stuff)", function(){
     var stuff = {title:'Demo Title', description:'This is a mock record'};
     var stuffs;
@@ -76,7 +77,8 @@ describe("db save demo data (aka stuff)", function(){
     });
 
 });
-
+*/
+/*
 describe("db get demo data (aka stuff)", function(){
     it("should be able to get a single record");
     it("should be able to get a list of all records");
@@ -90,3 +92,4 @@ describe("db update demo data (aka stuff)", function(){
 describe("db delete demo data (aka stuff)", function(){
     ("it should be able to change the data of a single record and save to the database");
 });
+*/

@@ -1,50 +1,54 @@
 var expect = require("chai").expect;
 var Promise = require("bluebird"); //
 var searchData = require("../../server/domain/rest-client-data.js");
-var Client = require('node-rest-client').Client;
-var bodyParser = require("body-parser");
 
-var options_auth={user:"85cok36t2u",password:"49xswrcbt0"};
+var ElasticSearchQuery = require("./rest-client-data-spec-queries.js");
 
-var client = new Client(options_auth);
+var args = new ElasticSearchQuery();
 
-describe("non-refactoried test", function() {
-
-    var oData;
-    var oResponse;
-    before(function(done){
-    args ={
-            q:"farm", // data passed to REST method (only useful in POST, PUT or PATCH methods)
-          };
-        client.get("https://18f-3263339722.us-east-1.bonsai.io/sba/_search?", args, function(data, response){
-                    // parsed response body as js object
-                    oData = data;
-                    // raw response
-                    oResponse = response;
-                    done();
-                })
-        });
-
-    it("should able to connect to a known bonsai restful url", function() {
-        console.error("foo: " + oData);
-       expect(oData.length).to.be.at.least(1);
-    });
-});
-
-describe("refactored test", function() {
+describe("The Elastic Search API Interface", function() {
     
-    var oData;
-    var oResponse;
-    before(function(done){
+ var val;
+    it("should connect and search based on a known query param", function(done){
     /* args ={
             q:"farm", // data passed to REST method (only useful in POST, PUT or PATCH methods)
           };
     */
-        searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/sba/_search?q=federal", "farm")
+        searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/sba/_search", args.genericArgs)
         .then(function(collection) {
-            oData = collection;
+            expect(collection.length).to.be.at.least(1);
             done();
         })
-});
-    it("should able to connect to a known bonsai restful url");
+    });
+    it("should filter results based on assistance type (loan, grant)", function(done){
+
+        //var args = JSON.parse('{"query": { "match": {"_type" : "sba_loan"} }}');
+        searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/sba/_search", args.assistanceTypeArgs)
+        .then(function(collection) {
+            expect(collection.length).to.be.at.least(1);
+        })
+        .catch(function(e) {
+            console.error("Exception: " + e);
+        });
+        done();
+    });
+
+
+    it("should filter results based on the industry", function(done){
+        searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/sba/_search", args.industryArgs)
+        .then(function(collection) {
+            expect(collection.length).to.be.at.least(1);
+            done();
+        })
+    });
+    
+    it("should filter results based on state name", function(done){
+        searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/sba/_search", args.stateArgs)
+        .then(function(collection) {
+            expect(collection.length).to.be.at.least(1);
+            done();
+        })
+    });
+
+
 });

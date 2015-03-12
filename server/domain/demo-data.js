@@ -9,7 +9,7 @@ var findStuff = function(query) {
     return Promise.cast(mongoose.model('Demo').find(query).exec());    
 }
 
-var createStuff = Promise.promisify(Stuff.create, Stuff);
+//var createStuff = Promise.promisify(Stuff.create, Stuff);
 
 //EXPORTS
 exports.findStuff = findStuff;
@@ -17,7 +17,7 @@ exports.findStuff = findStuff;
 //Params, function, object reference
 exports.connectDb = Promise.promisify(mongoose.connect, mongoose);
 
-exports.saveStuff = createStuff;
+//exports.saveStuff = createStuff;
 
 exports.seedStuff = function() {
 

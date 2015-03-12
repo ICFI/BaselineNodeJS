@@ -33,17 +33,19 @@ describe("service get demo data (aka stuff)", function() {
       });
    });
 });
+/**/
+/*
 
 describe("service save demo data (aka stuff)", function() {
    it("should validate that title is greater than 4 characeters");
-   /*
+   
    , function(done){
       request(app).post('/api/v1/demo').send(newStuff).end(function(err, res) {
          expect(dataSavedStuff.title.length).to.be.at.least(4);
          done();
       });  
    }
-   */
+   
 
    it("should valicate that title is less than 40 characters");
    it("should validate that description is greater than 4 characeters");
@@ -61,4 +63,5 @@ describe("service save demo data (aka stuff)", function() {
    it("should return a status of 200 to the front end if the database saved");
    it("should return a stuff with an id");
    it("should return an error if the database failed");
-});
+   
+});*/

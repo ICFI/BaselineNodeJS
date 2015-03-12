@@ -4,6 +4,9 @@ var expect = require("chai").expect;
 var request = require("supertest");
 var Promise = require("bluebird");
 var bodyParser = require("body-parser");
+var ElasticSearchQuery = require("../../server/domain/essearch-query-template.js");
+
+
 
 var searchImpl = {
    doSearch: function(){
@@ -35,11 +38,12 @@ var searchImpl = {
    },
 };
 
+
 var elasticService = require("../../server/services/rest-client-service")(searchImpl, app);
 
 
 
-describe("rest-client service search", function() {
+describe("The Elastic Search REST client service wrapper", function() {
    it("should search the remote server returning a result as an array", function(done){
    request(app).get('/api/v1/essearch/farm')
    .expect('Content-Type', /json/)
@@ -48,5 +52,49 @@ describe("rest-client service search", function() {
       done();
       });
    });
+   
+   it("should be able to modify the core query object based on input params", function(done){
+      var args = new ElasticSearchQuery();
+      var argTemplate = args.getQuery();
+      var pre = argTemplate.query.filtered.query.bool.should[0].query_string.query;
+      
+      argTemplate.query.filtered.query.bool.should[0].query_string.query = 'Docking Bay 7';
+      var post = argTemplate.query.filtered.query.bool.should[0].query_string.query;
+      expect(pre).to.be.a('string');
+      expect('*').to.equal(pre);
+      expect(post).to.be.a('string');
+      expect('Docking Bay 7').to.equal(post);
+      
+      done();
+   })
+    
+   it("should be able to add filter criteria to the a query template object", function(done){
+      var args = new ElasticSearchQuery();
+      var stateName = "Virginia";
+      var assistanceType = "Loan";
+      var industryType = "Child Care";
+      var oFilters = [];
+      
+      var argTemplate = args.getQuery();
+      var filterTemplate = args.getFilter();
+      
+      //argTemplate.query.filtered.filter = filterTemplate;
+      if(stateName.length>0)
+         oFilters.push({ "terms": { "state_name.raw": [ stateName ] } });
+      if(assistanceType.length>0)
+         oFilters.push({ "terms": { "loan_type.raw": [ assistanceType ] } });
+      if(industryType.length>0)
+         oFilters.push({ "terms": { "industry.raw": [ industryType ] } });   
+      
+      filterTemplate.bool.must=oFilters;
+      
+      argTemplate.query.filtered.filter = filterTemplate;
+      expect(argTemplate.query.filtered.filter.bool.must.length).to.equal(3);
+      expect(stateName).to.equal(argTemplate.query.filtered.filter.bool.must[0].terms["state_name.raw"].toString());
+      expect(assistanceType).to.equal(argTemplate.query.filtered.filter.bool.must[1].terms["loan_type.raw"].toString());
+      expect(industryType).to.equal(argTemplate.query.filtered.filter.bool.must[2].terms["industry.raw"].toString());
+      
+      done();
+   })
 });
 
