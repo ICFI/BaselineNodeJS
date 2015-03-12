@@ -36,6 +36,11 @@ app.use(session({
 
 app.use(csrf());
 
+app.use(function (req, res, next) {
+    res.cookie('XSRF-TOKEN', req.csrfToken());
+  next();
+});
+
 app.use(function (req, resp, next) {
  if(!shutting_down)
    return next();
