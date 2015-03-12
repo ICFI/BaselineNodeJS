@@ -35,7 +35,6 @@ describe("refactored test", function() {
     
     var oData;
     var oResponse;
-    //app.use(bodyParser.json());
     before(function(done){
     /* args ={
             q:"farm", // data passed to REST method (only useful in POST, PUT or PATCH methods)
