@@ -9,26 +9,33 @@ html
 
             section.row
                 .col-xs-12    
-                    form.well(ng-submit="submit()")
-                        legend Search
-                        .form-group
-                            label(for="assistance") Assistance
-                            select.form-control(ng-model="assistance" id="assistance" ng-options="option.name for option in assistanceOptions")
-                        .form-group
-                            label(for="industry") Industry
-                            select.form-control(ng-model="industry" ng-disabled="assistance.value == assistanceOptions[0].value" id="industry" ng-options="option.name for option in industryOptions")
-                        .form-group
-                            label(for="state") State
-                            select.form-control(placeholder="Description" ng-disabled="industry.value == industryOptions[0].value" ng-model="state" id="state" ng-options="option.name for option in stateOptions")
-                        button.btn.btn-primary(type="submit" ng-disabled="assistance.value == assistanceOptions[0].value") Get Results
+                    form.well.clearfix(ng-submit="submit()")
+                        fieldset.row
+                            legend.col-xs-12 Search
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            .form-group.col-sm-6
+                                label(for="assistance") Assistance
+                                select.form-control(ng-model="assistance" id="assistance" ng-options="option.name for option in assistanceOptions")
+                            .form-group.col-sm-6.clear
+                                label(for="industry") Industry
+                                select.form-control(ng-model="industry" ng-disabled="assistance.value == assistanceOptions[0].value" id="industry" ng-options="option.name for option in industryOptions")
+                            .form-group.col-sm-6.clear
+                                label(for="state") State
+                                select.form-control(placeholder="Description" ng-disabled="industry.value == industryOptions[0].value" ng-model="state" id="state" ng-options="option.name for option in stateOptions")
+                            div.col-xs-12.form-actions
+                                button.btn.btn-primary(type="submit" ng-disabled="assistance.value == assistanceOptions[0].value") Get Results
 
             section.row
+                div.col-xs-12
+                    status(data-status-message="statusMessage" data-status-type="statusType")
+
+            section.row(ng-if="searchResults.length > 0")
                 .col-xs-12
                     h2 Results for:
                         small
-                            span.label.label-primary(ng-repeat="criteria in searchCriteria" data-handle-click="removeCriteria(criteria)" data-criteria="criteria" data-search-criteria-item="data-search-criteria-item")
+                            span.label.label-success(ng-repeat="criteria in searchCriteria" data-handle-click="removeCriteria(criteria)" data-criteria="criteria" data-search-criteria-item="data-search-criteria-item")
 
-                    table.table(ng-if="searchResults.length > 0")
+                    table.table
                         thead
                             tr
                                 th Title
@@ -39,8 +46,6 @@ html
                                 td {{result.title}}
                                 td {{result.source}}
                                 td {{result.state}}
-                    p.alert.alert-info(ng-if="searchCriteria.length === 0") Use the search form above to find Small Business Lenders
-                    p.alert.alert-info(ng-if="searchCriteria.length !== 0 && searchResults.length === 0") Your search yielded no results.
 
     script(src='/scripts/angular/angular.js')
     script(src='/scripts/angular-resource/angular-resource.js')
@@ -49,3 +54,5 @@ html
     script(src='/app/factories.js')    
     script(src='/app/controllers.js')
     script(src='/app/directives.js')
+    script.
+        angular.module('app').constant('csrfToken', '!{csrfToken}');

@@ -14,15 +14,15 @@ describe("demoCtrl", function () {
     }));
 
     it("should have no search criteria", function () {
-        expect(scope.searchCriteria).to.empty;
+        expect(scope.searchCriteria).to.be.empty;
     });
 
     it("should have no search data", function () {
-        expect(scope.searchData).to.empty;
+        expect(scope.searchData).to.be.empty;
     });
 
     it("should have no search results", function () {
-        expect(scope.searchResults).to.empty;
+        expect(scope.searchResults).to.be.empty;
     });
 
     it("sets assistance dropdown to 3 options", function () {
@@ -73,5 +73,50 @@ describe("demoCtrl", function () {
         scope.$digest();
 
         expect(scope.stateOptions).to.have.length(3);
+    });
+
+    it("clears state and industry dropdowns if assistance is set to 'select'", function () {
+        scope.assistance = {
+            'name'  : 'Grants',
+            'value' : 'grants'
+        };
+        scope.$digest();
+
+        scope.industry = {
+            'name'  : 'Agriculture',
+            'value' : 'agriculture'
+        };
+        scope.$digest();
+
+        expect(scope.stateOptions).to.have.length(3);
+
+        scope.assistance = {
+            'name'  : 'Select Assistance Type',
+            'value' : ''
+        };
+        scope.$digest();
+
+        expect(scope.industryOptions).to.have.length(1);
+        expect(scope.stateOptions).to.have.length(1);
+    });
+
+    it("updates search criteria and search data when form is submitted", function () {
+        scope.assistance = {
+            'name'  : 'Grants',
+            'value' : 'grants'
+        };
+        scope.$digest();
+
+        scope.industry = {
+            'name'  : 'Agriculture',
+            'value' : 'agriculture'
+        };
+        scope.$digest();
+
+        scope.submit();
+
+        expect(scope.searchCriteria).to.have.length(2);
+        expect(scope.searchData.assistance).to.be.equal('grants');
+        expect(scope.searchData.industry).to.be.equal('agriculture');
     });
 });
