@@ -5,15 +5,7 @@ function ElasticSearchQuery() {
     "query": {
         "filtered": {
             "query": {
-                "bool": {
-                    "should": [
-                        {
-                            "query_string": {
-                                "query": "*"
-                            }
-                        }
-                    ]
-                }
+                "match_all": {}
             }
         }
     },
