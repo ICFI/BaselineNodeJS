@@ -52,7 +52,8 @@ describe("The Elastic Search REST client service wrapper", function() {
       done();
       });
    });
-   
+   /* removing test until we have search terms from user input. Query template was modfied for match_all */
+   /*
    it("should be able to modify the core query object based on input params", function(done){
       var args = new ElasticSearchQuery();
       var argTemplate = args.getQuery();
@@ -66,7 +67,7 @@ describe("The Elastic Search REST client service wrapper", function() {
       expect('Docking Bay 7').to.equal(post);
       
       done();
-   })
+   })*/
     
    it("should be able to add filter criteria to the a query template object", function(done){
       var args = new ElasticSearchQuery();
