@@ -1,5 +1,5 @@
 {
-  "name": "Generic NodeJS App",
+  "name": "generic-nodejs-app",
   "version": "0.0.2",
   "description": "A1 generic NodeJS implementation",
   "main": "index.js",
