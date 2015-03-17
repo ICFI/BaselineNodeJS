@@ -30,7 +30,10 @@ app.use(session({
     key: "sessionId",
     saveUninitialized: true,
     resave: true,
-    cookie: { secure: true }
+    cookie: { 
+        httpOnly: true,
+        secure: true 
+    }
 }));
 
 // Implement CSP with Helmet
