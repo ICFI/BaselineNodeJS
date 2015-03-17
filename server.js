@@ -67,6 +67,7 @@ app.use(helmet.xssFilter());
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET');
   res.setHeader("csrf-token", req.csrfToken());
+  res.cookie('XSRF-TOKEN', req.csrfToken());
   next();
 });
 
