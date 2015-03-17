@@ -16,12 +16,11 @@ var app = express();
 require('./server/services/demo-service.js')(demoData, app);
 require('./server/services/rest-client-service.js')(searchProxy, app);
 
-var csrfProtection = csrf({ cookie: true })
-
 app.set('views', __dirname + '/server/views');
 app.set('view engine', 'jade');
 
-
+// Don't allow anyone to put me in a frame.
+app.use(helmet.frameguard('deny'));
 
 app.use(express.static(__dirname + '/public'));
 
@@ -34,10 +33,36 @@ app.use(session({
     cookie: { secure: true }
 }));
 
+// Implement CSP with Helmet
+app.use(helmet.csp({
+  defaultSrc: ["'self'"],
+  scriptSrc: ["'unsafe-eval'", "'unsafe-inline'", "'self'", '*.google-analytics.com', '*.cloudfront.net'],
+  styleSrc: ["'unsafe-inline'", "'self'"],
+  imgSrc: ["'self'",'*.google-analytics.com', '*.cloudfront.net'],
+  connectSrc: ["'self'"],
+  fontSrc: ["'self'"],
+  objectSrc: [],
+  mediaSrc: [],
+  frameSrc: []
+}));
+
+//Implement CSRF protection
 app.use(csrf());
 
+
+
+// Implement X-XSS-Protection
+app.use(helmet.xssFilter());
+
+// Implement Strict-Transport-Security (force ssl access)
+ app.use(helmet.hsts({
+  maxAge: 7776000000,
+  includeSubdomains: true
+}));
+
+
 app.use(function (req, res, next) {
-    res.cookie('XSRF-TOKEN', req.csrfToken());
+  res.setHeader("csrf-token", req.csrfToken());
   next();
 });
 
@@ -55,9 +80,9 @@ app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOST || '0.0.0.0');
 
 app.get('*', function (req, res) {
-    res.setHeader("csrf-token", req.csrfToken());
-   res.render('index', { csrfToken: req.csrfToken()});
+   res.render('index');
 });
+
 
 //need to move to protect the secrets
 //mongoose.connect('mongodb://localhost/generic_node');
