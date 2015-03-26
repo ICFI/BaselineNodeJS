@@ -11,7 +11,7 @@
                     'state' : '=',
                     'city'  : '='
                 },
-                template : '<fieldset class="row"><ng-transclude></ng-transclude><div class="form-group col-sm-6"><label>State</label><select class="form-control" data-ng-options="state.abbreviation as state.name for state in states" data-ng-model="state"></select></div><div class="form-group col-sm-6" data-ng-class="{disabled: isCityDisabled()}"><label>City</label><input data-ng-model="city" data-ng-disabled="isCityDisabled()" class="form-control" type="text" /></div></fieldset>',
+                template : '<fieldset class="row"><ng-transclude></ng-transclude><div class="form-group col-sm-6"><label>State<br /><select class="form-control" data-ng-options="state.abbreviation as state.name for state in states" data-ng-model="state"></select></label></div><div class="form-group col-sm-6" data-ng-class="{disabled: isCityDisabled()}"><label>City<br /><input data-ng-model="city" data-ng-disabled="isCityDisabled()" class="form-control" type="text" /></label></div></fieldset>',
                 link : function (scope) {
                     var stateList = stateCities.get().slice();
 
@@ -48,7 +48,7 @@
                             text: 'Cost Results'
                         },
                         xAxis: {
-                            categories: ['Here', 'There', 'National']
+                            categories: ['Here', 'There', 'National Average']
                         },
                         yAxis: {
                             title: {
@@ -62,8 +62,21 @@
                     });
                 }
             };
+        },
+
+        status = function () {
+            return {
+                restrict    : 'E',
+                replace     : true,
+                template    : '<p class="alert" ng-if="statusMessage.length" ng-class="statusType">{{statusMessage}}</p>',
+                scope       : {
+                    statusType      : '=',
+                    statusMessage   : '='
+                }
+            };
         };
 
     angular.module('app').directive('inputStateCity', ['stateCities', inputStateCity])
-                         .directive('compareChart', [compareChart]);
+                         .directive('compareChart', [compareChart])
+                         .directive('status', [status]);
 }());

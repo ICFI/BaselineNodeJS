@@ -4,7 +4,16 @@
     'use strict';
 
     var HealthcareCompareController = function ($scope, hospitalCosts) {
-        var submit = function () {
+        var setStatus = function (message, type) {
+                $scope.statusMessage     = message;
+                $scope.statusType        = type;
+            },
+
+            clearStatus = function () {
+                setStatus('', '');
+            },
+
+            submit = function () {
                 $scope.searchResults = [];
 
                 var params = {
@@ -14,9 +23,15 @@
                     'state_abbr_there' : $scope.state_abbr_there
                 };
 
-                hospitalCosts.get(params).then(function (data) {
-                    $scope.searchResults.push(data);
-                });
+                hospitalCosts.get(params).then(
+                    function (data) {
+                        clearStatus();
+                        $scope.searchResults.push(data);
+                    },
+                    function (message) {
+                        setStatus(message, 'alert-danger');
+                    }
+                );
             },
 
             canSubmit = function () {
@@ -31,6 +46,9 @@
         $scope.state_abbr_here = '';
         $scope.city_name_there = '';
         $scope.state_abbr_there = '';
+
+        $scope.statusMessage     = '';
+        $scope.statusType        = '';
 
         $scope.canSubmit = canSubmit;
         $scope.submit = submit;

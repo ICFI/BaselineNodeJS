@@ -21,7 +21,7 @@
                     }).success(function (data) {
                         deferred.resolve(data);
                     }).error(function () {
-                        deferred.reject('Something went awry.');
+                        deferred.reject('There were no results.');
                     });
 
                     return deferred.promise;
