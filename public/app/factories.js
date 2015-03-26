@@ -3,16 +3,36 @@
 (function () {
     'use strict';
 
-    var businessLenderData = function ($http, $q, dataPaths) {
+    var hospitalCosts = function ($http, $q, dataPaths) {
+        /*
             var transformLenderData = function (lenderData) {
                     var lenders = [];
 
                     angular.forEach(lenderData, function (value) {
+                        var id, title, source, state;
+
+                        console.log("id: %s, type: %s, title: %s, source: %s, state: %s", value._id, value._type, value._source.title, value._source.agency, value._source.state_name);
+
+                        id     = value._id;
+
+                        switch (value._type) {
+                        case 'sba_loan': 
+                            title  = value._source.title;
+                            source = value._source.agency;
+                            state  = (value._source.state_name !== "null") ? value._source.state_name : '';
+                            break;
+                        default:
+                            title  = value._source.dc_title;
+                            source = value._source.description;
+                            state  = (value._source.state !== "null") ? value._source.state : '';
+                            break;
+                        }
+
                         lenders.push(angular.extend({}, {
-                            id     : value._id,
-                            title  : value._source.title,
-                            source : value._source.agency,
-                            state  : (value._source.state_name !== "null") ? value._source.state_name : ''
+                            "id"     : id,
+                            "title"  : title,
+                            "source" : source,
+                            "state"  : state
                         }));
                     });
 
@@ -42,7 +62,15 @@
             return {
                 query : query
             };
+            */
+
+            return {};
+        },
+
+        cityState = function ($http, $q, $dataPaths) {
+
         };
 
-    angular.module('app').factory('businessLenderData', ['$http', '$q', 'dataPaths', businessLenderData]);
+    angular.module('app').factory('hospitalCosts', ['$http', '$q', 'dataPaths', hospitalCosts])
+                                  .factory('cityState', ['$http', '$q', 'dataPaths', cityState]);
 }());
