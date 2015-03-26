@@ -1,54 +1,38 @@
 doctype
-html
+html(lang="en-us")
     head
+        meta(charset="utf-8")
+        meta(http-equiv="x-ua-compatible" content="ie-edge")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
         link(rel='stylesheet', href='/scripts/bootstrap/dist/css/bootstrap.min.css')
         link(rel='stylesheet', href='/css/global.css')
-    body(ng-app='app')
-        main.container(ng-controller='demoCtrl')
-            h1 Small Business Lenders
+    body(data-ng-app='app')
+        section.jumbotron
+            header.container
+                h1 Should You Move There?
+                h2 Compare Healthcare Costs
+        main.container(data-ng-controller='HealthcareCompareController' role="main")
+            section.row
+                .col-xs-6.col-xs-offset-3    
+                    form.well.clearfix(data-ng-submit="submit()")
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        fieldset(data-input-state-city="data-input-state-city")
+                            legend.col-xs-12 Where do you live now?
+                        fieldset(data-input-state-city="data-input-state-city")
+                            legend.col-xs-12 Where do you want to move?
+                        div.col-xs-12.form-actions
+                            button.btn.btn-primary(type="submit") Get Results
 
             section.row
-                .col-xs-12    
-                    form.well.clearfix(ng-submit="submit()")
-                        fieldset.row
-                            legend.col-xs-12 Search
-                            input(type="hidden" name="_csrf" value=csrfToken)
-                            .form-group.col-sm-6
-                                label(for="assistance") Assistance
-                                select.form-control(ng-model="assistance" id="assistance" ng-options="option.name for option in assistanceOptions")
-                            .form-group.col-sm-6.clear
-                                label(for="industry") Industry
-                                select.form-control(ng-model="industry" ng-disabled="assistance.value == assistanceOptions[0].value" id="industry" ng-options="option.name for option in industryOptions")
-                            .form-group.col-sm-6.clear
-                                label(for="state") State
-                                select.form-control(placeholder="Description" ng-disabled="industry.value == industryOptions[0].value" ng-model="state" id="state" ng-options="option.name for option in stateOptions")
-                            div.col-xs-12.form-actions
-                                button.btn.btn-primary(type="submit" ng-disabled="assistance.value == assistanceOptions[0].value") Get Results
+                #results.col-xs-6.col-xs-offset-3    
 
-            section.row
-                div.col-xs-12
-                    status(data-status-message="statusMessage" data-status-type="statusType")
 
-            section.row(ng-if="searchResults.length > 0")
-                .col-xs-12
-                    h2 Results for:
-                        small
-                            span.label.label-success(ng-repeat="criteria in searchCriteria" data-handle-click="removeCriteria(criteria)" data-criteria="criteria" data-search-criteria-item="data-search-criteria-item")
+            
 
-                    table.table
-                        thead
-                            tr
-                                th Title
-                                th Source
-                                th State
-                        tbody
-                            tr(ng-repeat="result in searchResults")
-                                td {{result.title}}
-                                td {{result.source}}
-                                td {{result.state}}
-
+    script(src='/scripts/jquery/dist/jquery.min.js')
     script(src='/scripts/angular/angular.js')
     script(src='/scripts/angular-resource/angular-resource.js')
+    script(src='/scripts/highcharts-release/highcharts.js')
     script(src='/app/app.js')
     script(src='/app/config.js')
     script(src='/app/factories.js')    
