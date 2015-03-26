@@ -36,4 +36,8 @@ module.exports = function(searchProxy, app) {
             res.send(collection);
         });
     });
+    
+    app.get('/api/v1/healthcosts/:city_name_here?/:state_abbr_here?/:city_name_there?/:state_abbr_there?', function(req, res) {
+      res.send({ average_cost_here: "150", average_cost_there: "125",  average_cost_nation: "140" });
+    })
 }
