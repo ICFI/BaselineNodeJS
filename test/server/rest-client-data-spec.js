@@ -49,6 +49,27 @@ describe("The Elastic Search API Interface", function() {
             done();
         })
     });
+    
+    it("should be able to define an array of search locations", function(done){
+        var reqParams = {city_name_here: "FAIRFAX", state_here: "VA", city_name_there: "KNOXVILLE", state_there: "TN" };
+        searchData.setLocations(reqParams);
+        expect(searchData.getLocations().length).to.equal(2);
+        done(); 
 
+    });
+    
+    it("should be able to execute the search with multiple params", function(done){
+        var reqParams = {city_name_here: "FAIRFAX", state_here: "VA", city_name_there: "KNOXVILLE", state_there: "TN" };
+        var results;
+      searchData.setLocations(reqParams)
+      .then(function(locations){
+        searchData.executeSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", locations);
+      })
+      .then(function(data){
+         console.log("ARZ HERE: data=" + JSON.stringify(data));
+         done();
+      });
+
+    });
 
 });
