@@ -59,14 +59,22 @@ describe("The Elastic Search API Interface", function() {
     });
     
     it("should be able to execute the search with multiple params", function(done){
-        var reqParams = {city_name_here: "FAIRFAX", state_here: "VA", city_name_there: "KNOXVILLE", state_there: "TN" };
-        var results;
+       // var reqParams = {city_name_here: "FAIRFAX", state_here: "VA", city_name_there: "KNOXVILLE", state_there: "TN" };
+        var reqParams = {city_name_here: "FAIRFAX", state_here: "VA" };
+        var results=[];
+  
       searchData.setLocations(reqParams)
-      .then(function(locations){
-        searchData.executeSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", locations);
+      .each(function(location){
+          searchData.executeHospitalSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", location)
+          .then(function(collection){
+              console.log(collection)
+            results.push(collection)
+
+          })
+        
       })
       .then(function(data){
-         console.log("ARZ HERE: data=" + JSON.stringify(data));
+         console.log("ARZ HERE: data=" + JSON.stringify(results));
          done();
       });
 

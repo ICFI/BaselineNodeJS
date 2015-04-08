@@ -58,27 +58,59 @@ exports.setLocations = function(params){
   
 };
 
+
 exports.executeSearch = function(url, locations){
   if(searchTerms.length > 0) {
 //iterate through collection
-//return data
+//return data'
+var client = new Client(options_auth);
       return Promise.map(locations, function(term){
         var elasticTemplate = new ElasticSearchQuery();
         var args = elasticTemplate.getHospitalCostsTemplate();
         args.query.bool.must[0].match.provider_state = term.state;
         args.query.bool.must[1].match.provider_city = term.city;
-
-        executeRestClient(url, args)
-        .then(function(data){
-          searchResults.push(data);
-        })
-        .then(function() {
-          console.log("executeSEarch return " + searchResults);
-          return searchResults;
+        return new Promise(function(resolve, reject) {
+        try {
+             var restArgs = {
+                data: { },
+                headers:{"Content-Type": "application/json"} 
+              };
+            restArgs.data = args;
+            client.post(url, restArgs, function(data, response) {
+              //searchResults.push(data);
+              resolve(data);
+            });
+         }catch (e) {
+          // reject the promise with caught error
+          console.log(e);
+          reject(e);
+        }
         });
     });
   }
 };
+
+exports.executeHospitalSearch = function(url, location)
+{
+  
+  var elasticTemplate = new ElasticSearchQuery();
+  var args = elasticTemplate.getHospitalCostsTemplate();
+  args.query.bool.must[0].match.provider_state = location.state;
+  args.query.bool.must[1].match.provider_city = location.city;
+  return new Promise(function(resolve, reject) {
+    try {
+      executeRestClient(url, args)
+      .then(function(data){
+        resolve(data);
+      })
+      }catch (e) {
+          // reject the promise with caught error
+          console.log(e);
+          reject(e);
+        }
+  })
+}
+
 
 function executeRestClient(url, args) {
   console.log("entered executeRestClient");
@@ -91,7 +123,7 @@ function executeRestClient(url, args) {
               };
             restArgs.data = args;
             client.post(url, restArgs, function(data, response) {
-              searchResults.push(data);
+              //searchResults.push(data);
               resolve(data);
             });
          }catch (e) {
