@@ -4,73 +4,309 @@
     'use strict';
 
     var hospitalCosts = function ($http, $q, dataPaths) {
-        /*
-            var transformLenderData = function (lenderData) {
-                    var lenders = [];
-
-                    angular.forEach(lenderData, function (value) {
-                        var id, title, source, state;
-
-                        console.log("id: %s, type: %s, title: %s, source: %s, state: %s", value._id, value._type, value._source.title, value._source.agency, value._source.state_name);
-
-                        id     = value._id;
-
-                        switch (value._type) {
-                        case 'sba_loan': 
-                            title  = value._source.title;
-                            source = value._source.agency;
-                            state  = (value._source.state_name !== "null") ? value._source.state_name : '';
-                            break;
-                        default:
-                            title  = value._source.dc_title;
-                            source = value._source.description;
-                            state  = (value._source.state !== "null") ? value._source.state : '';
-                            break;
-                        }
-
-                        lenders.push(angular.extend({}, {
-                            "id"     : id,
-                            "title"  : title,
-                            "source" : source,
-                            "state"  : state
-                        }));
-                    });
-
-                    return lenders;
+            var formatGetPath = function (params) {
+                    return dataPaths.hospitalcosts
+                           + params.city_name_here + '/'
+                           + params.state_abbr_here + '/'
+                           + params.city_name_there + '/'
+                           + params.state_abbr_there;
                 },
 
-                query = function (queryParams) {
+                get = function (params) {
                     var deferred = $q.defer();
 
                     $http({
                         'method': 'GET',
-                        'url'   : dataPaths.businessLenderURI,
-                        'params': queryParams
+                        'url'   : formatGetPath(params)
                     }).success(function (data) {
-                        if (data.hits && data.hits.hits) {
-                            deferred.resolve(transformLenderData(data.hits.hits));
-                        } else {
-                            deferred.reject('Something went awry.');
-                        }
+                        deferred.resolve(data);
                     }).error(function () {
-                        deferred.reject('Something went awry.');
+                        deferred.reject('There were no results.');
                     });
 
                     return deferred.promise;
                 };
 
             return {
-                query : query
+                get : get
             };
-            */
-
-            return {};
         },
 
-        cityState = function ($http, $q, $dataPaths) {
+        stateCities = function ($http, $q, dataPaths) {
+            var states = [
+                    {
+                        "name": "Alabama",
+                        "abbreviation": "AL"
+                    },
+                    {
+                        "name": "Alaska",
+                        "abbreviation": "AK"
+                    },
+                    {
+                        "name": "American Samoa",
+                        "abbreviation": "AS"
+                    },
+                    {
+                        "name": "Arizona",
+                        "abbreviation": "AZ"
+                    },
+                    {
+                        "name": "Arkansas",
+                        "abbreviation": "AR"
+                    },
+                    {
+                        "name": "California",
+                        "abbreviation": "CA"
+                    },
+                    {
+                        "name": "Colorado",
+                        "abbreviation": "CO"
+                    },
+                    {
+                        "name": "Connecticut",
+                        "abbreviation": "CT"
+                    },
+                    {
+                        "name": "Delaware",
+                        "abbreviation": "DE"
+                    },
+                    {
+                        "name": "District Of Columbia",
+                        "abbreviation": "DC"
+                    },
+                    {
+                        "name": "Federated States Of Micronesia",
+                        "abbreviation": "FM"
+                    },
+                    {
+                        "name": "Florida",
+                        "abbreviation": "FL"
+                    },
+                    {
+                        "name": "Georgia",
+                        "abbreviation": "GA"
+                    },
+                    {
+                        "name": "Guam",
+                        "abbreviation": "GU"
+                    },
+                    {
+                        "name": "Hawaii",
+                        "abbreviation": "HI"
+                    },
+                    {
+                        "name": "Idaho",
+                        "abbreviation": "ID"
+                    },
+                    {
+                        "name": "Illinois",
+                        "abbreviation": "IL"
+                    },
+                    {
+                        "name": "Indiana",
+                        "abbreviation": "IN"
+                    },
+                    {
+                        "name": "Iowa",
+                        "abbreviation": "IA"
+                    },
+                    {
+                        "name": "Kansas",
+                        "abbreviation": "KS"
+                    },
+                    {
+                        "name": "Kentucky",
+                        "abbreviation": "KY"
+                    },
+                    {
+                        "name": "Louisiana",
+                        "abbreviation": "LA"
+                    },
+                    {
+                        "name": "Maine",
+                        "abbreviation": "ME"
+                    },
+                    {
+                        "name": "Marshall Islands",
+                        "abbreviation": "MH"
+                    },
+                    {
+                        "name": "Maryland",
+                        "abbreviation": "MD"
+                    },
+                    {
+                        "name": "Massachusetts",
+                        "abbreviation": "MA"
+                    },
+                    {
+                        "name": "Michigan",
+                        "abbreviation": "MI"
+                    },
+                    {
+                        "name": "Minnesota",
+                        "abbreviation": "MN"
+                    },
+                    {
+                        "name": "Mississippi",
+                        "abbreviation": "MS"
+                    },
+                    {
+                        "name": "Missouri",
+                        "abbreviation": "MO"
+                    },
+                    {
+                        "name": "Montana",
+                        "abbreviation": "MT"
+                    },
+                    {
+                        "name": "Nebraska",
+                        "abbreviation": "NE"
+                    },
+                    {
+                        "name": "Nevada",
+                        "abbreviation": "NV"
+                    },
+                    {
+                        "name": "New Hampshire",
+                        "abbreviation": "NH"
+                    },
+                    {
+                        "name": "New Jersey",
+                        "abbreviation": "NJ"
+                    },
+                    {
+                        "name": "New Mexico",
+                        "abbreviation": "NM"
+                    },
+                    {
+                        "name": "New York",
+                        "abbreviation": "NY"
+                    },
+                    {
+                        "name": "North Carolina",
+                        "abbreviation": "NC"
+                    },
+                    {
+                        "name": "North Dakota",
+                        "abbreviation": "ND"
+                    },
+                    {
+                        "name": "Northern Mariana Islands",
+                        "abbreviation": "MP"
+                    },
+                    {
+                        "name": "Ohio",
+                        "abbreviation": "OH"
+                    },
+                    {
+                        "name": "Oklahoma",
+                        "abbreviation": "OK"
+                    },
+                    {
+                        "name": "Oregon",
+                        "abbreviation": "OR"
+                    },
+                    {
+                        "name": "Palau",
+                        "abbreviation": "PW"
+                    },
+                    {
+                        "name": "Pennsylvania",
+                        "abbreviation": "PA"
+                    },
+                    {
+                        "name": "Puerto Rico",
+                        "abbreviation": "PR"
+                    },
+                    {
+                        "name": "Rhode Island",
+                        "abbreviation": "RI"
+                    },
+                    {
+                        "name": "South Carolina",
+                        "abbreviation": "SC"
+                    },
+                    {
+                        "name": "South Dakota",
+                        "abbreviation": "SD"
+                    },
+                    {
+                        "name": "Tennessee",
+                        "abbreviation": "TN"
+                    },
+                    {
+                        "name": "Texas",
+                        "abbreviation": "TX"
+                    },
+                    {
+                        "name": "Utah",
+                        "abbreviation": "UT"
+                    },
+                    {
+                        "name": "Vermont",
+                        "abbreviation": "VT"
+                    },
+                    {
+                        "name": "Virgin Islands",
+                        "abbreviation": "VI"
+                    },
+                    {
+                        "name": "Virginia",
+                        "abbreviation": "VA"
+                    },
+                    {
+                        "name": "Washington",
+                        "abbreviation": "WA"
+                    },
+                    {
+                        "name": "West Virginia",
+                        "abbreviation": "WV"
+                    },
+                    {
+                        "name": "Wisconsin",
+                        "abbreviation": "WI"
+                    },
+                    {
+                        "name": "Wyoming",
+                        "abbreviation": "WY"
+                    }
+                ];
 
+            var formatGetPath = function (params) {
+                    return dataPaths.stateCities
+                           + params.state + '/'
+                           + params.city;
+                },
+
+                get = function (params) {
+                    var response,
+                        deferred;
+
+                    if (params && params.state) {
+                        deferred = $q.defer();
+
+                        $http({
+                            'method': 'GET',
+                            'url'   : formatGetPath(params)
+                        }).success(function (data) {
+                            deferred.resolve(data);
+                        }).error(function () {
+                            deferred.reject('Something went awry.');
+                        });
+
+                        response = deferred.promise;
+                    } else {
+                        response = states;
+                    }
+
+                    return response;
+                };
+
+            return {
+                get: get
+            };
         };
 
     angular.module('app').factory('hospitalCosts', ['$http', '$q', 'dataPaths', hospitalCosts])
-                                  .factory('cityState', ['$http', '$q', 'dataPaths', cityState]);
+                                  .factory('stateCities', ['$http', '$q', 'dataPaths', stateCities]);
 }());

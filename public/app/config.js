@@ -4,8 +4,8 @@
     'use strict';
 
     var dataPaths = {
-        'businessLenderURI'  : '/api/v1/essearch/',
-        'stateCities'        : '/api/v1/stateCities/'
+        'hospitalcosts' : '/api/v1/hospitalcosts/',
+        'stateCities'   : '/api/v1/stateCities/'
     };
 
     angular.module('app').constant('dataPaths', dataPaths);

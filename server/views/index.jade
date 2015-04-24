@@ -6,25 +6,30 @@ html(lang="en-us")
         meta(name="viewport" content="width=device-width, initial-scale=1")
         link(rel='stylesheet', href='/scripts/bootstrap/dist/css/bootstrap.min.css')
         link(rel='stylesheet', href='/css/global.css')
+        title Compare Hospital Costs
     body(data-ng-app='app')
         section.jumbotron
             header.container
                 h1 Should You Move There?
-                h2 Compare Healthcare Costs
+                h2 Compare Hospital Costs
         main.container(data-ng-controller='HealthcareCompareController' role="main")
             section.row
-                .col-xs-6.col-xs-offset-3    
+                .col-xs-6.col-xs-offset-3
                     form.well.clearfix(data-ng-submit="submit()")
                         input(type="hidden" name="_csrf" value=csrfToken)
-                        fieldset(data-input-state-city="data-input-state-city")
+                        fieldset(data-input-state-city="data-input-state-city" data-city="city_name_here" data-state="state_abbr_here")
                             legend.col-xs-12 Where do you live now?
-                        fieldset(data-input-state-city="data-input-state-city")
+                        fieldset(data-input-state-city="data-input-state-city" data-city="city_name_there" data-state="state_abbr_there")
                             legend.col-xs-12 Where do you want to move?
                         div.col-xs-12.form-actions
-                            button.btn.btn-primary(type="submit") Get Results
+                            button.btn.btn-primary(type="submit" data-ng-disabled="!canSubmit()") Get Results
 
             section.row
-                #results.col-xs-6.col-xs-offset-3    
+                div.col-xs-6.col-xs-offset-3
+                    status(data-status-message="statusMessage" data-status-type="statusType")
+
+            section.row
+                #results.col-xs-6.col-xs-offset-3(data-ng-repeat="result in searchResults" data-compare-chart="data-compare-chart" data-compare-data="result")
 
 
             
