@@ -35,62 +35,73 @@ var searchImpl = {
 }]);
       });
    },
-};
-
+   parseTypeAhead : function(params){
+  var retVal = {}
+  retVal.collection = [];
+  var i =0;
+  for(var s in params){
+    retVal.collection[i] = {key: params[s].key};
+    i++;
+  }
+  return retVal;
+}
+}
 
 var stateReturn = {
-took: 3,
-timed_out: false,
-_shards: {
-total: 1,
-successful: 1,
-failed: 0
-},
-hits: {
-total: 18524,
-max_score: 0,
-hits: [ ]
-},
-aggregations: {
-autocomplete: {
-doc_count_error_upper_bound: 0,
-sum_other_doc_count: 0,
-buckets: [
-{
-key: "MA",
-doc_count: 3191
-},
-{
-key: "MD",
-doc_count: 2799
-},
-{
-key: "ME",
-doc_count: 598
-},
-{
-key: "MI",
-doc_count: 4298
-},
-{
-key: "MN",
-doc_count: 1906
-},
-{
-key: "MO",
-doc_count: 3266
-},
-{
-key: "MS",
-doc_count: 2037
-},
-{
-key: "MT",
-doc_count: 429
-}
-]
-}
-}
+    took: 3,
+    timed_out: false,
+    _shards: {
+        total: 1,
+        successful: 1,
+        failed: 0
+    },
+    hits: {
+        total: 18524,
+        max_score: 0,
+        hits: [
+            
+        ]
+    },
+    aggregations: {
+        autocomplete: {
+            doc_count_error_upper_bound: 0,
+            sum_other_doc_count: 0,
+            buckets: [
+                {
+                    key: "MA",
+                    doc_count: 3191
+                },
+                {
+                    key: "MD",
+                    doc_count: 2799
+                },
+                {
+                    key: "ME",
+                    doc_count: 598
+                },
+                {
+                    key: "MI",
+                    doc_count: 4298
+                },
+                {
+                    key: "MN",
+                    doc_count: 1906
+                },
+                {
+                    key: "MO",
+                    doc_count: 3266
+                },
+                {
+                    key: "MS",
+                    doc_count: 2037
+                },
+                {
+                    key: "MT",
+                    doc_count: 429
+                }
+            ]
+        }
+    }
 }
 
 var elasticService = require("../../server/services/rest-client-service")(searchImpl, app);
@@ -212,13 +223,13 @@ describe("The Elastic Search REST client service wrapper", function() {
             done();
          });
          
-         /*it("should be able to reduce raw results to a consolidated JSON result set", function(done){
+         it("should be able to reduce raw results to a consolidated JSON result set with a length of 8", function(done){
             var returnedValues = stateReturn.aggregations.autocomplete.buckets;
-            var collection = {};
-            foreach(var s in returnedValues){
-               
-            }
-         });*/
+            retVal = searchImpl.parseTypeAhead(returnedValues);
+            console.log(JSON.stringify(retVal));
+            expect(retVal.collection).to.have.length(8);
+            done();
+         });
 
       });
    
