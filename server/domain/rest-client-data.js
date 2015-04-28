@@ -23,6 +23,40 @@ exports.getLocations = function() {
 var isEven = function(someNumber){
     return (someNumber%2 == 0) ? true : false;
 };
+/*
+exports.parseTypeAhead = function(params){
+  var retVal = {}
+  retVal.collection = [];
+  var i =0;
+  for(var s in params){
+    retVal.collection[i] = {key: params[s].key};
+    i++;
+  }
+  return retVal;
+}
+*/
+
+exports.parseTypeAhead = function(params){
+  return new Promise(function(resolve, reject){
+    try{
+      //console.log(JSON.parse(params));
+      var vals = JSON.parse(params)
+      var lookupVals = vals.aggregations.autocomplete.buckets
+      var retVal = {}
+      retVal.collection = [];
+      var i =0;
+      for(var s in lookupVals){
+        retVal.collection[i] = {key: lookupVals[s].key};
+        i++;
+      }
+      resolve(retVal)
+    }
+    catch (e) {
+      // reject the promise with caught error
+      reject(e);
+    }
+  });
+}
 
 //set collection to search
 exports.setLocations = function(params){

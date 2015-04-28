@@ -97,7 +97,7 @@ module.exports = function(searchProxy, app) {
       });
     });
     
-    app.get('/api/v1/states/:letters', function(req, res) {
+    app.get('/api/v0/states/:letters', function(req, res) {
         res.send({collection:[{value:"MA"},
                                 {value:"MD"},
                                 {value:"ME"},
@@ -109,7 +109,7 @@ module.exports = function(searchProxy, app) {
                                 ]})
     });
     
-        app.get('/api/v1/cities/:letters', function(req, res) {
+        app.get('/api/v0/cities/:letters', function(req, res) {
         res.send({collection:[{value:"MACOMB"},
                                 {value:"MACON"},
                                 {value:"MADERA"},
@@ -122,17 +122,33 @@ module.exports = function(searchProxy, app) {
                                 ]})
     });
     
-    app.get('/api/v2/states/:letters', function(req, res) {
-             var searchString = "M";
-            var elasticTemplate = new ElasticSearchQuery();
-            var args = elasticTemplate.getStateTypeAhead();
-         
-            args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
-            args.query.prefix['provider_state.raw'].value = searchString.substr(0, 1);
-           console.log("ARZ HERE 000"); 
-         searchProxy.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
-            .then(function(collection) {
-                res.send(collection);
-            })     
+    app.get('/api/v1/states/:letters', function(req, res) {
+      var searchString = req.params.letters.toUpperCase();
+      var elasticTemplate = new ElasticSearchQuery();
+      var args = elasticTemplate.getStateTypeAhead();
+      
+      args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
+      args.query.prefix['provider_state.raw'].value = searchString.substr(0, 1);
+
+      searchProxy.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
+        .then(searchProxy.parseTypeAhead)
+        .then(function(collection){
+        res.send(collection);
+        });
     });
+    
+    app.get('/api/v1/cities/:letters', function(req, res) {
+      var searchString = req.params.letters.toUpperCase();
+      var elasticTemplate = new ElasticSearchQuery();
+      var args = elasticTemplate.getCityTypeAhead();
+      
+      args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
+      args.query.prefix['provider_city.raw'].value = searchString.substr(0, 1);
+
+      searchProxy.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
+        .then(searchProxy.parseTypeAhead)
+        .then(function(collection){
+        res.send(collection);
+        });
+    });    
 };
