@@ -9,9 +9,10 @@
                 transclude  : true,
                 scope       : {
                     'state' : '=',
-                    'city'  : '='
+                    'city'  : '=',
+                    'id'    : '@'
                 },
-                template : '<fieldset class="row"><ng-transclude></ng-transclude><div class="form-group col-sm-6"><label>State<br /><select class="form-control" data-ng-options="state.abbreviation as state.name for state in states" data-ng-model="state"></select></label></div><div class="form-group col-sm-6" data-ng-class="{disabled: isCityDisabled()}"><label>City<br /><input data-ng-model="city" data-ng-disabled="isCityDisabled()" class="form-control" type="text" /></label></div></fieldset>',
+                templateUrl : '/app/partials/input-state-city.html',
                 link : function (scope) {
                     var stateList = stateCities.get().slice();
 

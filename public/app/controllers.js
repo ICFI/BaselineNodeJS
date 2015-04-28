@@ -17,9 +17,9 @@
                 $scope.searchResults = [];
 
                 var params = {
-                    'city_name_here' : $scope.city_name_here,
+                    'city_name_here' : $scope.city_name_here.title,
                     'state_abbr_here' : $scope.state_abbr_here,
-                    'city_name_there' : $scope.city_name_there,
+                    'city_name_there' : $scope.city_name_there.title,
                     'state_abbr_there' : $scope.state_abbr_there
                 };
 
