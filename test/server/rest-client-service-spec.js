@@ -11,33 +11,87 @@ var ElasticSearchQuery = require("../../server/domain/essearch-query-template.js
 var searchImpl = {
    doSearch: function(){
       return new Promise( function(resolve, reject) {
-         resolve([{"took":4,"timed_out":false,"_shards":{"total":1,"successful":1,"failed":0},"hits":{"total":1,"max_score":0.6793474,"hits":[{"_index":"sba","_type":"sba_state","_id":"AUvmMVcaL8y6AC8FYJt-","_score":0.6793474,"_source":
-                      {
-                        "url": "http://www.fsa.usda.gov/FSA/webapp?area=home&subject=prsu&topic=flp-fp",
-                        "title": "Farm Storage Facility Loan Program",
-                        "state_name": null,
-                        "is_disaster": "0",
-                        "is_disabled": "0",
-                        "is_development": "0",
-                        "is_contractor": "0",
-                        "industry": "Agriculture",
-                        "gov_type": "Federal",
-                        "description": "Provides low-interest financing for producers to build or upgrade farm storage and handling facilities.",
-                        "agency": "U.S. Dept of Agriculture",
-                        "is_exporting": "0",
-                        "is_general_purpose": "0",
-                        "is_green": "0",
-                        "is_military": "0",
-                        "is_minority": "0",
-                        "is_rural": "0",
-                        "is_woman": "0",
-                        "loan_type": "Loan"
-                      }
-                    }]}}]);
+         resolve([{
+    "_shards": {
+        "failed": 0,
+        "successful": 1,
+        "total": 1
+    },
+    "aggregations": {
+        "city_avg": {
+            "value": 6382.669839652174
+        },
+        "city_sum": {
+            "value": 146801.406312
+        }
+    },
+    "hits": {
+        "hits": [],
+        "max_score": 0.0,
+        "total": 23
+    },
+    "timed_out": false,
+    "took": 1
+}]);
       });
    },
 };
 
+
+var stateReturn = {
+took: 3,
+timed_out: false,
+_shards: {
+total: 1,
+successful: 1,
+failed: 0
+},
+hits: {
+total: 18524,
+max_score: 0,
+hits: [ ]
+},
+aggregations: {
+autocomplete: {
+doc_count_error_upper_bound: 0,
+sum_other_doc_count: 0,
+buckets: [
+{
+key: "MA",
+doc_count: 3191
+},
+{
+key: "MD",
+doc_count: 2799
+},
+{
+key: "ME",
+doc_count: 598
+},
+{
+key: "MI",
+doc_count: 4298
+},
+{
+key: "MN",
+doc_count: 1906
+},
+{
+key: "MO",
+doc_count: 3266
+},
+{
+key: "MS",
+doc_count: 2037
+},
+{
+key: "MT",
+doc_count: 429
+}
+]
+}
+}
+}
 
 var elasticService = require("../../server/services/rest-client-service")(searchImpl, app);
 
@@ -97,5 +151,101 @@ describe("The Elastic Search REST client service wrapper", function() {
       
       done();
    })
+   
+   describe("The Elastic Hospital Costs Search REST client service wrapper", function() {
+      it("should be able to create an instance of the ElasticSearchQuery template", function(done){
+         var stateName = "STATE";
+         var cityName = "CITY";
+         var elasticTemplate = new ElasticSearchQuery();
+         var args = elasticTemplate.getHospitalCostsTemplate();
+         
+         expect(stateName).to.equal(args.query.bool.must[0].match.provider_state.toString());
+         expect(cityName).to.equal(args.query.bool.must[1].match.provider_city.toString());
+         done();
+      });
+      
+      it("should be able to update state and city based on params", function(done){
+         var stateName = "VA";
+         var cityName = "Fairfax";
+         var elasticTemplate = new ElasticSearchQuery();
+         var args = elasticTemplate.getHospitalCostsTemplate();
+         
+         args.query.bool.must[0].match.provider_state = stateName;
+         args.query.bool.must[1].match.provider_city = cityName;
+         expect(stateName).to.equal(args.query.bool.must[0].match.provider_state.toString());
+         expect(cityName).to.equal(args.query.bool.must[1].match.provider_city.toString());
+         done();
+      });
+      
+      it("should return the average cost for the city queried", function(done){
+         
+         searchImpl.doSearch()
+         .then(function(collection){
+            expect(6382.669839652174).to.deep.equal(collection[0].aggregations.city_avg.value);
+            done();
+         })
+
+      });
+   });
+   
+      describe("The state type ahead helper", function() {
+         it("should be able to create an instance of the ElasticSearchQuery template", function(done){
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getStateTypeAhead();
+            
+            expect(args).to.be.an('object');
+         
+            done();
+         });
+         
+         it("should be updated with a desired search string", function(done){
+            var stateString = "N";
+             var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getStateTypeAhead();   
+            //console.log(args);
+            //GOOD console.log(args.aggs.autocomplete.terms.include.pattern) == "M.*";
+            //GOOD console.log(args.query.prefix['provider_state.raw'].value) == "M";
+            args.aggs.autocomplete.terms.include.pattern = stateString + '.*';
+            args.query.prefix['provider_state.raw'].value = stateString.substr(0, 1);
+            expect("N.*").to.deep.equal(args.aggs.autocomplete.terms.include.pattern);
+            expect("N").to.deep.equal(args.query.prefix['provider_state.raw'].value);
+            done();
+         });
+         
+         /*it("should be able to reduce raw results to a consolidated JSON result set", function(done){
+            var returnedValues = stateReturn.aggregations.autocomplete.buckets;
+            var collection = {};
+            foreach(var s in returnedValues){
+               
+            }
+         });*/
+
+      });
+   
+      describe("The city type ahead helper", function() {
+         it("should be able to create an instance of the ElasticSearchQuery template", function(done){
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getCityTypeAhead();
+            
+            //expect args to be an object
+            expect(args).to.be.an('object');
+            done();
+         });
+         
+         it("should be updated with a desired search string", function(done){
+            var cityString = "Map";  //targeting Maple
+             var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getCityTypeAhead();   
+            //console.log(args);
+            //GOOD console.log(args.aggs.autocomplete.terms.include.pattern) == "M.*";
+            //GOOD console.log(args.query.prefix['provider_state.raw'].value) == "M";
+            args.aggs.autocomplete.terms.include.pattern = cityString + '.*';
+            args.query.prefix['provider_city.raw'].value = cityString.substr(0, 1);
+            expect("Map.*").to.deep.equal(args.aggs.autocomplete.terms.include.pattern);
+            expect("M").to.deep.equal(args.query.prefix['provider_city.raw'].value);
+            done();
+         });
+
+      });      
 });
 

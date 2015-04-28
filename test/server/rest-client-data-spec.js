@@ -49,6 +49,70 @@ describe("The Elastic Search API Interface", function() {
             done();
         })
     });
+    
+    it("should be able to define an array of search locations", function(done){
+        var reqParams = {city_name_here: "FAIRFAX", state_here: "VA", city_name_there: "KNOXVILLE", state_there: "TN" };
+        searchData.setLocations(reqParams);
+        expect(searchData.getLocations().length).to.equal(2);
+        done(); 
 
+    });
+    
+    it("should be able to execute the search with multiple params", function(done){
+       // var reqParams = {city_name_here: "FAIRFAX", state_here: "VA", city_name_there: "KNOXVILLE", state_there: "TN" };
+        var reqParams = {city_name_here: "FAIRFAX", state_here: "VA" };
+        var results=[];
+  
+      searchData.setLocations(reqParams)
+      .then(function(locations){
+          searchData.executeSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", locations)
+          .then(function(data){
+              console.log(data);
+          })
+      })
+      .then(function(results){
+          console.log(results);
+      })
+      .then(function(data){
+         console.log("ARZ HERE: data=" + JSON.stringify(results));
+         done();
+      });
+
+    });
 
 });
+
+      describe("The state type ahead helper", function() {
+      
+         it("should return a list of states given a prefix and search string subset", function(done){
+            var searchString = "M";
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getStateTypeAhead();
+         
+            args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
+            args.query.prefix['provider_state.raw'].value = searchString.substr(0, 1);
+            searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
+            .then(function(collection) {
+                expect(collection.length).to.be.at.least(1);
+            })
+            .catch(function(e) {
+                console.error("Exception: " + e);
+            });
+        done();
+         });
+
+      });
+      
+      describe("The city type ahead helper", function() {
+         it("should be able to create an instance of the ElasticSearchQuery template", function(done){
+            //var elasticTemplate = new ElasticSearchQuery();
+            //var args = elasticTemplate.getCityTypeAhead();
+            
+            //expect args to be an object
+         
+            done();
+         });
+         
+         it("should return a list of cities given a prefix and search string subset");
+
+      });  
