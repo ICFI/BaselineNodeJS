@@ -3,8 +3,8 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser')
 var helmet = require('helmet');
 var csrf = require('csurf');
-var demoModel = require('./server/models/Demo');
-var demoData = require("./server/domain/demo-data.js");
+//var demoModel = require('./server/models/Demo');
+//var demoData = require("./server/domain/demo-data.js");
 var searchProxy = require("./server/domain/rest-client-data.js");
 
 //local variable declaration
@@ -13,7 +13,7 @@ var server = null;
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
-require('./server/services/demo-service.js')(demoData, app);
+//require('./server/services/demo-service.js')(demoData, app);
 require('./server/services/rest-client-service.js')(searchProxy, app);
 
 app.set('views', __dirname + '/server/views');
@@ -91,12 +91,12 @@ app.get('*', function (req, res) {
 
 //need to move to protect the secrets
 //mongoose.connect('mongodb://localhost/generic_node');
-demoData.connectDb('mongodb://icfproto:Ug7ZmdXK@ds051831.mongolab.com:51831/generic_node')
+/*demoData.connectDb('mongodb://icfproto:Ug7ZmdXK@ds051831.mongolab.com:51831/generic_node')
 .then(function() {
     console.log('connected to mongodb successfully!');
     demoData.seedStuff();
 });
-
+*/
 server = app.listen(app.get('port'), app.get('host'), function () {
  
  console.log("Express server listening on port " + app.get('port'));

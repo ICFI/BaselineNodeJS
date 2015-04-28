@@ -52,6 +52,52 @@ function ElasticSearchQuery() {
     },
     "size" : 0
     };
+    
+    this.stateTypeAhead = {
+              "size": 0,
+              "aggs": {
+                "autocomplete": {
+                  "terms": {
+                    "field": "provider_state.raw",
+                    "order": {
+                      "_term": "asc"
+                    },
+                    "include": {
+                      "pattern": "M.*"
+                    },
+                    "size" : 30
+                  }
+                }
+              },
+              "query": {
+                "prefix": {
+                  "provider_state.raw": {  "value": "M"    }
+                }
+              }
+            }
+
+    this.cityTypeAhead = {
+              "size": 0,
+              "aggs": {
+                "autocomplete": {
+                  "terms": {
+                    "field": "provider_city.raw",
+                    "order": {
+                      "_term": "asc"
+                    },
+                    "include": {
+                      "pattern": "M.*"
+                    },
+                    "size" : 30
+                  }
+                }
+              },
+              "query": {
+                "prefix": {
+                  "provider_city.raw": {  "value": "M"    }
+                }
+              }
+            }
 }
 
 // class methods
@@ -65,6 +111,13 @@ ElasticSearchQuery.prototype.getFilter = function() {
 
 ElasticSearchQuery.prototype.getHospitalCostsTemplate = function () {
     return this.hospitalCostsTemplate;
+};
+
+ElasticSearchQuery.prototype.getStateTypeAhead = function () {
+    return this.stateTypeAhead;
+};
+ElasticSearchQuery.prototype.getCityTypeAhead = function () {
+    return this.cityTypeAhead;
 };
 // export the class
 module.exports = ElasticSearchQuery;

@@ -69,23 +69,17 @@ var client = new Client(options_auth);
         var args = elasticTemplate.getHospitalCostsTemplate();
         args.query.bool.must[0].match.provider_state = term.state;
         args.query.bool.must[1].match.provider_city = term.city;
-        return new Promise(function(resolve, reject) {
-        try {
-             var restArgs = {
-                data: { },
-                headers:{"Content-Type": "application/json"} 
-              };
-            restArgs.data = args;
-            client.post(url, restArgs, function(data, response) {
+          var restArgs = {
+          data: { },
+          headers:{"Content-Type": "application/json"} 
+        };
+      restArgs.data = args;     
+        client.post(url, restArgs, function(data, response) {
               //searchResults.push(data);
-              resolve(data);
-            });
-         }catch (e) {
-          // reject the promise with caught error
-          console.log(e);
-          reject(e);
-        }
-        });
+              searchResults.push(data);
+              
+        })
+           // resolve(searchResults);
     });
   }
 };
@@ -134,4 +128,4 @@ function executeRestClient(url, args) {
     });
   }
   
-  
+

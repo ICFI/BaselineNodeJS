@@ -224,6 +224,52 @@ function ElasticSearchQuery() {
             }
           ]
         };
+        
+            this.stateTypeAhead = {
+              "size": 0,
+              "aggs": {
+                "autocomplete": {
+                  "terms": {
+                    "field": "provider_state.raw",
+                    "order": {
+                      "_term": "asc"
+                    },
+                    "include": {
+                      "pattern": "M.*"
+                    },
+                    "size" : 30
+                  }
+                }
+              },
+              "query": {
+                "prefix": {
+                  "provider_state.raw": {  "value": "M"    }
+                }
+              }
+            }
+
+    this.cityTypeAhead = {
+              "size": 0,
+              "aggs": {
+                "autocomplete": {
+                  "terms": {
+                    "field": "provider_city.raw",
+                    "order": {
+                      "_term": "asc"
+                    },
+                    "include": {
+                      "pattern": "M.*"
+                    },
+                    "size" : 30
+                  }
+                }
+              },
+              "query": {
+                "prefix": {
+                  "provider_city.raw": {  "value": "M"    }
+                }
+              }
+            }
 }
 // class methods
 ElasticSearchQuery.prototype.getGenericQuery = function() {
@@ -238,6 +284,13 @@ ElasticSearchQuery.prototype.getStateQuery = function() {
 };
 ElasticSearchQuery.prototype.getIndustryQuery = function() {
   return this.industryArgs;
+};
+
+ElasticSearchQuery.prototype.getStateTypeAhead = function () {
+    return this.stateTypeAhead;
+};
+ElasticSearchQuery.prototype.getCityTypeAhead = function () {
+    return this.cityTypeAhead;
 };
 // export the class
 module.exports = ElasticSearchQuery;

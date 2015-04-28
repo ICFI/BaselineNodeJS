@@ -64,14 +64,14 @@ describe("The Elastic Search API Interface", function() {
         var results=[];
   
       searchData.setLocations(reqParams)
-      .each(function(location){
-          searchData.executeHospitalSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", location)
-          .then(function(collection){
-              console.log(collection)
-            results.push(collection)
-
+      .then(function(locations){
+          searchData.executeSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", locations)
+          .then(function(data){
+              console.log(data);
           })
-        
+      })
+      .then(function(results){
+          console.log(results);
       })
       .then(function(data){
          console.log("ARZ HERE: data=" + JSON.stringify(results));
@@ -81,3 +81,38 @@ describe("The Elastic Search API Interface", function() {
     });
 
 });
+
+      describe("The state type ahead helper", function() {
+      
+         it("should return a list of states given a prefix and search string subset", function(done){
+            var searchString = "M";
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getStateTypeAhead();
+         
+            args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
+            args.query.prefix['provider_state.raw'].value = searchString.substr(0, 1);
+            searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
+            .then(function(collection) {
+                expect(collection.length).to.be.at.least(1);
+            })
+            .catch(function(e) {
+                console.error("Exception: " + e);
+            });
+        done();
+         });
+
+      });
+      
+      describe("The city type ahead helper", function() {
+         it("should be able to create an instance of the ElasticSearchQuery template", function(done){
+            //var elasticTemplate = new ElasticSearchQuery();
+            //var args = elasticTemplate.getCityTypeAhead();
+            
+            //expect args to be an object
+         
+            done();
+         });
+         
+         it("should return a list of cities given a prefix and search string subset");
+
+      });  

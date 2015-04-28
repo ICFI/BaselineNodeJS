@@ -38,6 +38,61 @@ var searchImpl = {
 };
 
 
+var stateReturn = {
+took: 3,
+timed_out: false,
+_shards: {
+total: 1,
+successful: 1,
+failed: 0
+},
+hits: {
+total: 18524,
+max_score: 0,
+hits: [ ]
+},
+aggregations: {
+autocomplete: {
+doc_count_error_upper_bound: 0,
+sum_other_doc_count: 0,
+buckets: [
+{
+key: "MA",
+doc_count: 3191
+},
+{
+key: "MD",
+doc_count: 2799
+},
+{
+key: "ME",
+doc_count: 598
+},
+{
+key: "MI",
+doc_count: 4298
+},
+{
+key: "MN",
+doc_count: 1906
+},
+{
+key: "MO",
+doc_count: 3266
+},
+{
+key: "MS",
+doc_count: 2037
+},
+{
+key: "MT",
+doc_count: 429
+}
+]
+}
+}
+}
+
 var elasticService = require("../../server/services/rest-client-service")(searchImpl, app);
 
 
@@ -131,6 +186,66 @@ describe("The Elastic Search REST client service wrapper", function() {
          })
 
       });
-   })
+   });
+   
+      describe("The state type ahead helper", function() {
+         it("should be able to create an instance of the ElasticSearchQuery template", function(done){
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getStateTypeAhead();
+            
+            expect(args).to.be.an('object');
+         
+            done();
+         });
+         
+         it("should be updated with a desired search string", function(done){
+            var stateString = "N";
+             var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getStateTypeAhead();   
+            //console.log(args);
+            //GOOD console.log(args.aggs.autocomplete.terms.include.pattern) == "M.*";
+            //GOOD console.log(args.query.prefix['provider_state.raw'].value) == "M";
+            args.aggs.autocomplete.terms.include.pattern = stateString + '.*';
+            args.query.prefix['provider_state.raw'].value = stateString.substr(0, 1);
+            expect("N.*").to.deep.equal(args.aggs.autocomplete.terms.include.pattern);
+            expect("N").to.deep.equal(args.query.prefix['provider_state.raw'].value);
+            done();
+         });
+         
+         /*it("should be able to reduce raw results to a consolidated JSON result set", function(done){
+            var returnedValues = stateReturn.aggregations.autocomplete.buckets;
+            var collection = {};
+            foreach(var s in returnedValues){
+               
+            }
+         });*/
+
+      });
+   
+      describe("The city type ahead helper", function() {
+         it("should be able to create an instance of the ElasticSearchQuery template", function(done){
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getCityTypeAhead();
+            
+            //expect args to be an object
+            expect(args).to.be.an('object');
+            done();
+         });
+         
+         it("should be updated with a desired search string", function(done){
+            var cityString = "Map";  //targeting Maple
+             var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getCityTypeAhead();   
+            //console.log(args);
+            //GOOD console.log(args.aggs.autocomplete.terms.include.pattern) == "M.*";
+            //GOOD console.log(args.query.prefix['provider_state.raw'].value) == "M";
+            args.aggs.autocomplete.terms.include.pattern = cityString + '.*';
+            args.query.prefix['provider_city.raw'].value = cityString.substr(0, 1);
+            expect("Map.*").to.deep.equal(args.aggs.autocomplete.terms.include.pattern);
+            expect("M").to.deep.equal(args.query.prefix['provider_city.raw'].value);
+            done();
+         });
+
+      });      
 });
 
