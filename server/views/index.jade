@@ -6,6 +6,7 @@ html(lang="en-us")
         meta(name="viewport" content="width=device-width, initial-scale=1")
         link(rel='stylesheet', href='/scripts/bootstrap/dist/css/bootstrap.min.css')
         link(rel='stylesheet', href='/css/global.css')
+        link(rel='stylesheet', href='/lib/angucomplete-alt/angucomplete-alt.css')
         title Compare Hospital Costs
     body(data-ng-app='app')
         section.jumbotron
@@ -15,11 +16,11 @@ html(lang="en-us")
         main.container(data-ng-controller='HealthcareCompareController' role="main")
             section.row
                 .col-xs-6.col-xs-offset-3
-                    form.well.clearfix(data-ng-submit="submit()")
+                    form.well.clearfix(data-ng-submit="submit()" autocomplete="off")
                         input(type="hidden" name="_csrf" value=csrfToken)
-                        fieldset(data-input-state-city="data-input-state-city" data-city="city_name_here" data-state="state_abbr_here")
+                        fieldset(data-id="live-now" data-input-state-city="data-input-state-city" data-city="city_name_here" data-state="state_abbr_here")
                             legend.col-xs-12 Where do you live now?
-                        fieldset(data-input-state-city="data-input-state-city" data-city="city_name_there" data-state="state_abbr_there")
+                        fieldset(data-id="move-to" data-input-state-city="data-input-state-city" data-city="city_name_there" data-state="state_abbr_there")
                             legend.col-xs-12 Where do you want to move?
                         div.col-xs-12.form-actions
                             button.btn.btn-primary(type="submit" data-ng-disabled="!canSubmit()") Get Results
@@ -38,6 +39,7 @@ html(lang="en-us")
     script(src='/scripts/angular/angular.js')
     script(src='/scripts/angular-resource/angular-resource.js')
     script(src='/scripts/highcharts-release/highcharts.js')
+    script(src='/lib/angucomplete-alt/angucomplete-alt.min.js')
     script(src='/app/app.js')
     script(src='/app/config.js')
     script(src='/app/factories.js')    
