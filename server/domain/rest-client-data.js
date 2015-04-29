@@ -42,25 +42,31 @@ exports.parseTypeAhead = function(params){
       reject(e);
     }
   });
-}
+};
 
 exports.parseHospitalSearchResults = function(cityrecords){
     return new Promise(function(resolve, reject){
-      //console.log(cityrecords);
+      
       try{
+        var hospitalResults = {};
+        
         for(var n in cityrecords){
-          var curCity = JSON.parse(cityrecords[n])
-          //console.log();
-          console.log(curCity.aggregations.city_avg.value)
+          var curCity = JSON.parse(cityrecords[n]);
+          if(n==0){
+            hospitalResults.average_cost_here = curCity.aggregations.city_avg.value;
+          }else{
+            hospitalResults.average_cost_there = curCity.aggregations.city_avg.value;
+          }
         }
-        resolve(cityrecords);
+        hospitalResults.average_cost_nation = 12874.337416780518;
+        resolve(hospitalResults);
       }
       catch (e) {
         // reject the promise with caught error
         reject(e);
       }
-    })
-}
+    });
+};
 
 //set collection to search
 exports.setLocations = function(params){

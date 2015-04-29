@@ -66,13 +66,30 @@ describe("The Elastic Search API Interface", function() {
   
         searchData.setLocations(reqParams)
         .then(searchData.executeHospitalSearch)
-        .then(searchData.parseHospitalSearchResults)
         .then(function(data){
             expect(data).to.have.length(2);
             done();
         });
 
     });
+    it("should be able to parse the results of the resulting dataset for the return values", function(done){
+        var reqParams = {city_name_here: "FAIRFAX", state_here: "VA", city_name_there: "KNOXVILLE", state_there: "TN" };
+        //var reqParams = {city_name_here: "FAIRFAX", state_here: "VA" };
+
+  
+        searchData.setLocations(reqParams)
+        .then(searchData.executeHospitalSearch)
+        .then(searchData.parseHospitalSearchResults)
+        .then(function(data){
+            //console.log(data.average_cost_here);
+            expect(data.average_cost_here).to.be.at.least(1);
+            expect(data.average_cost_there).to.be.at.least(1);
+            expect(data.average_cost_nation).to.be.at.least(1);
+            done();
+        });
+
+    });    
+    
 
 });
 
