@@ -13,28 +13,14 @@ var options_auth={user:"85cok36t2u",password:"49xswrcbt0"};
 var searchTerms = [];
 var searchResults = [];
 
-exports.returnedData = searchResults;
+//exports.returnedData = searchResults;
 exports.doSearch = executeRestClient;
 
-exports.getLocations = function() {
-  return searchTerms;
-}
 
 var isEven = function(someNumber){
     return (someNumber%2 == 0) ? true : false;
 };
-/*
-exports.parseTypeAhead = function(params){
-  var retVal = {}
-  retVal.collection = [];
-  var i =0;
-  for(var s in params){
-    retVal.collection[i] = {key: params[s].key};
-    i++;
-  }
-  return retVal;
-}
-*/
+
 
 exports.parseTypeAhead = function(params){
   return new Promise(function(resolve, reject){
@@ -58,6 +44,24 @@ exports.parseTypeAhead = function(params){
   });
 }
 
+exports.parseHospitalSearchResults = function(cityrecords){
+    return new Promise(function(resolve, reject){
+      //console.log(cityrecords);
+      try{
+        for(var n in cityrecords){
+          var curCity = JSON.parse(cityrecords[n])
+          //console.log();
+          console.log(curCity.aggregations.city_avg.value)
+        }
+        resolve(cityrecords);
+      }
+      catch (e) {
+        // reject the promise with caught error
+        reject(e);
+      }
+    })
+}
+
 //set collection to search
 exports.setLocations = function(params){
   var i = 0;
@@ -79,8 +83,6 @@ exports.setLocations = function(params){
           }
           i++;
         }
-        //console.log("ARZ setLocations: " + JSON.stringify(locations));
-        searchTerms = locations;
         resolve(locations);
       } 
       catch (e) {
@@ -93,55 +95,37 @@ exports.setLocations = function(params){
 };
 
 
-exports.executeSearch = function(url, locations){
-  if(searchTerms.length > 0) {
-//iterate through collection
-//return data'
-var client = new Client(options_auth);
+exports.executeHospitalSearch = function(locations)
+{
+  var url = "https://18f-3263339722.us-east-1.bonsai.io/health/_search";
+  
+  searchResults = [];
+  var elasticTemplate = new ElasticSearchQuery();
+  var args = elasticTemplate.getHospitalCostsTemplate();
       return Promise.map(locations, function(term){
         var elasticTemplate = new ElasticSearchQuery();
         var args = elasticTemplate.getHospitalCostsTemplate();
         args.query.bool.must[0].match.provider_state = term.state;
         args.query.bool.must[1].match.provider_city = term.city;
-          var restArgs = {
-          data: { },
-          headers:{"Content-Type": "application/json"} 
-        };
-      restArgs.data = args;     
-        client.post(url, restArgs, function(data, response) {
-              //searchResults.push(data);
-              searchResults.push(data);
-              
-        })
-           // resolve(searchResults);
-    });
-  }
-};
+        return new Promise(function(resolve, reject) {
+          try {
+            executeRestClient(url, args)
+            .then(function(data){
+              resolve(data);
+            })
+            }catch (e) {
+                // reject the promise with caught error
+                console.log(e);
+                reject(e);
+              }
+        })        
+      });  
 
-exports.executeHospitalSearch = function(url, location)
-{
-  
-  var elasticTemplate = new ElasticSearchQuery();
-  var args = elasticTemplate.getHospitalCostsTemplate();
-  args.query.bool.must[0].match.provider_state = location.state;
-  args.query.bool.must[1].match.provider_city = location.city;
-  return new Promise(function(resolve, reject) {
-    try {
-      executeRestClient(url, args)
-      .then(function(data){
-        resolve(data);
-      })
-      }catch (e) {
-          // reject the promise with caught error
-          console.log(e);
-          reject(e);
-        }
-  })
 }
 
 
 function executeRestClient(url, args) {
-  console.log("entered executeRestClient");
+
   var client = new Client(options_auth);
     return new Promise(function(resolve, reject) {
         try {

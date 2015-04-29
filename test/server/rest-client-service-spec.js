@@ -226,7 +226,6 @@ describe("The Elastic Search REST client service wrapper", function() {
          it("should be able to reduce raw results to a consolidated JSON result set with a length of 8", function(done){
             var returnedValues = stateReturn.aggregations.autocomplete.buckets;
             retVal = searchImpl.parseTypeAhead(returnedValues);
-            console.log(JSON.stringify(retVal));
             expect(retVal.collection).to.have.length(8);
             done();
          });

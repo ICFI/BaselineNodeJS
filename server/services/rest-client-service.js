@@ -87,14 +87,11 @@ module.exports = function(searchProxy, app) {
     });
     
     app.get('/api/v3/hospitalcosts/:city_name_here?/:state_abbr_here?/:city_name_there?/:state_abbr_there?', function(req, res){
-      searchProxy.setLocations(req.params)
-      .then(function(locations){
-        searchProxy.returnedData = [];
-        searchProxy.executeSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", locations);
-      })
-      .then(function(data){
-          res.send(searchProxy.returnedData);
-      });
+        searchProxy.setLocations(req.params)
+        .then(searchProxy.executeHospitalSearch)
+        .then(function(data){
+            res.send(data);
+        });
     });
     
     app.get('/api/v0/states/:letters', function(req, res) {
@@ -109,7 +106,7 @@ module.exports = function(searchProxy, app) {
                                 ]})
     });
     
-        app.get('/api/v0/cities/:letters', function(req, res) {
+        app.get('/api/v0/cities/:state/:letters', function(req, res) {
         res.send({collection:[{value:"MACOMB"},
                                 {value:"MACON"},
                                 {value:"MADERA"},
