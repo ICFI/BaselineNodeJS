@@ -225,7 +225,7 @@ describe("The Elastic Search REST client service wrapper", function() {
          
          it("should be able to reduce raw results to a consolidated JSON result set with a length of 8", function(done){
             var returnedValues = stateReturn.aggregations.autocomplete.buckets;
-            retVal = searchImpl.parseTypeAhead(returnedValues);
+            var retVal = searchImpl.parseTypeAhead(returnedValues);
             expect(retVal.collection).to.have.length(8);
             done();
          });
@@ -244,15 +244,17 @@ describe("The Elastic Search REST client service wrapper", function() {
          
          it("should be updated with a desired search string", function(done){
             var cityString = "Map";  //targeting Maple
+            var stateString = "MD";
              var elasticTemplate = new ElasticSearchQuery();
             var args = elasticTemplate.getCityTypeAhead();   
             //console.log(args);
             //GOOD console.log(args.aggs.autocomplete.terms.include.pattern) == "M.*";
             //GOOD console.log(args.query.prefix['provider_state.raw'].value) == "M";
             args.aggs.autocomplete.terms.include.pattern = cityString + '.*';
-            args.query.prefix['provider_city.raw'].value = cityString.substr(0, 1);
+            args.query.bool.must[0].prefix['provider_city.raw'].value = cityString.substr(0, 1);
+            args.query.bool.must[1].match['provider_state.raw'] = stateString;
             expect("Map.*").to.deep.equal(args.aggs.autocomplete.terms.include.pattern);
-            expect("M").to.deep.equal(args.query.prefix['provider_city.raw'].value);
+            expect("M").to.deep.equal(args.query.bool.must[0].prefix['provider_city.raw'].value);
             done();
          });
 

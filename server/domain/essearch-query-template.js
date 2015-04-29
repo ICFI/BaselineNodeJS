@@ -92,10 +92,23 @@ function ElasticSearchQuery() {
                   }
                 }
               },
-              "query": {
-                "prefix": {
-                  "provider_city.raw": {  "value": "M"    }
-                }
+                "query": {
+                  "bool": {
+                      "must": [
+                          {
+                              "prefix": {
+                                  "provider_city.raw": {
+                                      "value": "B"
+                                  }
+                              }
+                          },
+                          {
+                              "match": {
+                                  "provider_state.raw": "MA"
+                              }
+                          }
+                      ]
+                  }
               }
             }
 }

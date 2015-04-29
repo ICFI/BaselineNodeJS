@@ -116,13 +116,25 @@ describe("The Elastic Search API Interface", function() {
       
       describe("The city type ahead helper", function() {
          it("should be able to create an instance of the ElasticSearchQuery template", function(done){
-            //var elasticTemplate = new ElasticSearchQuery();
-            //var args = elasticTemplate.getCityTypeAhead();
-            
-            //expect args to be an object
+            var searchString = "M";
+            var stateString = "MD";
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getCityTypeAhead();
          
+            args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
+            //console.log("arz here: " + JSON.stringify(args.query.bool.must[1]));
+            args.query.bool.must[0].prefix['provider_city.raw'].value = searchString.substr(0, 1);
+            args.query.bool.must[1].match['provider_state.raw'] = stateString;
+            searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
+            .then(function(collection) {
+                expect(collection.length).to.be.at.least(1);
+            })
+            .catch(function(e) {
+                console.error("Exception: " + e);
+            });
             done();
          });
+         
          
          it("should return a list of cities given a prefix and search string subset");
 

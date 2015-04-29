@@ -101,5 +101,22 @@ module.exports = function(searchProxy, app) {
         .then(function(collection){
         res.send(collection);
         });
-    });    
+    });   
+     app.get('/api/v2/cities/:state/:letters', function(req, res) {
+      var searchString = req.params.letters.toUpperCase();
+      var elasticTemplate = new ElasticSearchQuery();
+      var args = elasticTemplate.getCityTypeAhead();
+      
+      args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
+      args.query.bool.must[0].prefix['provider_city.raw'].value = searchString.substr(0, 1);
+      args.query.bool.must[1].match['provider_state.raw'] = req.params.state;
+
+      searchProxy.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
+        .then(searchProxy.parseTypeAhead)
+        .then(function(collection){
+        res.send(collection);
+        });
+    });
+    
+
 };
