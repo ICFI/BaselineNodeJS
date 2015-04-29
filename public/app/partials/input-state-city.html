@@ -1,13 +1,23 @@
 <fieldset class="row">
     <ng-transclude></ng-transclude>
 
-    <div class="form-group col-lg-6">
-        <label>State</label>
-        <select class="form-control"></select>
+    <div class="form-group col-sm-6">
+        <label for="{{id}}-state">State</label>
+        <select id="{{id}}-state" class="form-control" data-ng-options="state.abbreviation as state.name for state in states" data-ng-model="state"></select>
     </div>
 
-    <div class="form-group col-lg-6">
-        <label>City</label>
-        <input class="form-control" type="text" />
+    <div class="form-group col-sm-6" data-ng-class="{disabled: isCityDisabled()}">
+        <label for="{{id}}-city_value">City</label>
+            <angucomplete-alt id="{{id}}-city"
+                placeholder="Search Cities"
+                pause="400"
+                minlength="1"
+                selected-object="city"
+                remote-url="/api/v1/cities/"
+                remote-url-data-field="collection"
+                title-field="key"
+                disable-input="isCityDisabled()"
+                input-class="form-control input-city"/>
+        </label>
     </div>
 </fieldset>
