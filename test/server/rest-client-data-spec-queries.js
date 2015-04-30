@@ -301,7 +301,7 @@ function ElasticSearchQuery() {
               }
           }
         },
-        "fields" : ["provider_name", "provider_city", "provider_state", "location"]
+        "fields" : ["provider_name", "provider_city", "provider_state", "location", "lat", "lon"]
       };
 }
 // class methods

@@ -125,6 +125,7 @@ module.exports = function(searchProxy, app) {
       args.query.filtered.filter.geo_distance.location.lon=parseFloat(req.params.lon);
       args.query.filtered.filter.geo_distance.distance=req.params.dist;
       searchProxy.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health-geo/_search", args)
+      .then(searchProxy.parseHospitalGeoRecords)
       .then(function(collection){
         res.send(collection);
       });            

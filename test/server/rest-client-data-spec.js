@@ -6,6 +6,61 @@ var ElasticSearchQuery = require("./rest-client-data-spec-queries.js");
 
 var args = new ElasticSearchQuery();
 
+var hospitalGeoResults = {
+    "timed_out": false,
+    "hits": {
+        "max_score": 1,
+        "total": 971,
+        "hits": [
+            {
+                "_index": "health-geo",
+                "_id": "inpatient-1935",
+                "_score": 1,
+                "fields": {
+                    "provider_city": [
+                        "ALEXANDRIA"
+                    ],
+                    "provider_name": [
+                        "INOVA ALEXANDRIA HOSPITAL"
+                    ],
+                    "lon": [
+                        "-77.10468212"
+                    ],
+                    "lat": [
+                        "38.82405122"
+                    ],
+                    "provider_state": [
+                        "VA"
+                    ]
+                },
+                "_type": "inpatient"
+            },
+            {
+                "_index": "health-geo",
+                "_id": "inpatient-3460",
+                "_score": 1,
+                "fields": {
+                    "provider_city": [
+                        "FAIRFAX"
+                    ],
+                    "provider_name": [
+                        "INOVA FAIR OAKS HOSPITAL"
+                    ],
+                    "lon": [
+                        "-77.37919145"
+                    ],
+                    "lat": [
+                        "38.88470687"
+                    ],
+                    "provider_state": [
+                        "VA"
+                    ]
+                },
+                "_type": "inpatient"
+            }
+        ]
+    }
+};
 describe("The Elastic Search API Interface", function() {
     
  var val;
@@ -183,6 +238,22 @@ describe("The Elastic Search API Interface", function() {
             })
             .catch(function(e) {
                 console.error("Exception: " + e);
+            });
+         });
+         
+         it("should be able to parse the returned JSON result from the ElasticSearch index and transform it to a meaningful result", function(done){
+             var curResults = JSON.stringify(hospitalGeoResults);
+             
+             searchData.parseHospitalGeoRecords(curResults)
+             .then(function(data){
+                expect(data).to.have.length(2);
+                expect(data[0].name).to.equal("INOVA ALEXANDRIA HOSPITAL");
+                expect(data[1].name).to.equal("INOVA FAIR OAKS HOSPITAL");
+                done();
+             })
+             .catch(function(e) {
+                console.error("Exception: " + e);
+                done();
             });
          });
       });
