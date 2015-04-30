@@ -110,7 +110,27 @@ function ElasticSearchQuery() {
                       ]
                   }
               }
-            }
+            };
+            
+            this.geoQuery = {
+                  "query": {
+                    "filtered" : {
+                        "query" : {
+                            "match_all" : {}
+                        },
+                        "filter" : {
+                            "geo_distance" : {
+                                "distance" : "5mi",
+                                "location" : {
+                                    "lat" : 38.9000,
+                                    "lon" : -77.2667
+                                }
+                            }
+                        }
+                    }
+                  },
+                  "fields" : ["provider_name", "provider_city", "provider_state", "location"]
+                };            
 }
 
 // class methods
@@ -131,6 +151,10 @@ ElasticSearchQuery.prototype.getStateTypeAhead = function () {
 };
 ElasticSearchQuery.prototype.getCityTypeAhead = function () {
     return this.cityTypeAhead;
+};
+
+ElasticSearchQuery.prototype.getGeoQuery = function () {
+    return this.geoQuery;
 };
 // export the class
 module.exports = ElasticSearchQuery;

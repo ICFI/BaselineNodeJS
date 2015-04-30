@@ -13,7 +13,6 @@ var options_auth={user:"85cok36t2u",password:"49xswrcbt0"};
 var searchTerms = [];
 var searchResults = [];
 
-//exports.returnedData = searchResults;
 exports.doSearch = executeRestClient;
 
 
@@ -140,6 +139,7 @@ function executeRestClient(url, args) {
                 headers:{"Content-Type": "application/json"} 
               };
             restArgs.data = args;
+            console.log(JSON.stringify(restArgs.data));
             client.post(url, restArgs, function(data, response) {
               //searchResults.push(data);
               resolve(data);
@@ -151,5 +151,7 @@ function executeRestClient(url, args) {
         }
     });
   }
+  
+
   
 

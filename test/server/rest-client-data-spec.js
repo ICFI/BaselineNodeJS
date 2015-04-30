@@ -122,6 +122,21 @@ describe("The Elastic Search API Interface", function() {
             var args = elasticTemplate.getCityTypeAhead();
          
             args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
+            args.query.bool.must[0].prefix['provider_city.raw'].value = searchString.substr(0, 1);
+            args.query.bool.must[1].match['provider_state.raw'] = stateString;
+
+            done();
+         });
+         
+         
+         it("should return a list of cities given a prefix and search string subset", function(done){
+             
+            var searchString = "M";
+            var stateString = "MD";
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getCityTypeAhead();
+         
+            args.aggs.autocomplete.terms.include.pattern = searchString + '.*';
             //console.log("arz here: " + JSON.stringify(args.query.bool.must[1]));
             args.query.bool.must[0].prefix['provider_city.raw'].value = searchString.substr(0, 1);
             args.query.bool.must[1].match['provider_state.raw'] = stateString;
@@ -134,8 +149,40 @@ describe("The Elastic Search API Interface", function() {
             });
             done();
          });
-         
-         
-         it("should return a list of cities given a prefix and search string subset");
 
       });  
+      
+      describe("The geospatial query", function(){
+         it("should be able to create an instance of the query and populate values", function(done){
+             //29.9574629,-90.0629541
+             //distance 10mi
+             var myLat = '29.9574629';
+             var myLon = '-90.0629541';
+             var myDist = '10mi';
+             
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getGeoQuery();
+            args.query.filtered.filter.geo_distance.location.lat=myLat;
+            args.query.filtered.filter.geo_distance.location.lon=myLon;
+            args.query.filtered.filter.geo_distance.distance=myDist;
+            expect(myLat).to.deep.equal(args.query.filtered.filter.geo_distance.location.lat);
+            expect(myLon).to.deep.equal(args.query.filtered.filter.geo_distance.location.lon);
+            expect(myDist).to.deep.equal(args.query.filtered.filter.geo_distance.distance);
+            done();
+         });
+         
+         it("should be able to execute the query and return a list of facilities within the geo boundaries specified", function(done){
+             
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getGeoQuery();
+            //static query is defined for Vienna VA with 5mi which covers INOVA Fairfax Hospital
+            searchData.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health/_search", args)
+            .then(function(collection) {
+                expect(collection.length).to.be.at.least(1);
+                done();
+            })
+            .catch(function(e) {
+                console.error("Exception: " + e);
+            });
+         });
+      });

@@ -258,6 +258,36 @@ describe("The Elastic Search REST client service wrapper", function() {
             done();
          });
 
-      });      
+      });
+      
+      describe("The geospatial query", function(){
+         it("should be able to create an instance of the geo query from the ElasticSearchQuery template", function(done){
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getGeoQuery();
+            
+            //expect args to be an object
+            expect(args).to.be.an('object');
+            done();            
+         });
+         it("should be able to set the lat and lng [lon] of the geo query", function(done){
+             //29.9574629,-90.0629541
+             //distance 10mi
+             var myLat = '29.9574629';
+             var myLon = '-90.0629541';
+             var myDist = '10mi';
+             
+            var elasticTemplate = new ElasticSearchQuery();
+            var args = elasticTemplate.getGeoQuery();
+            args.query.filtered.filter.geo_distance.location.lat=myLat;
+            args.query.filtered.filter.geo_distance.location.lon=myLon;
+            args.query.filtered.filter.geo_distance.distance=myDist;
+            
+            expect(myLat).to.deep.equal(args.query.filtered.filter.geo_distance.location.lat);
+            expect(myLon).to.deep.equal(args.query.filtered.filter.geo_distance.location.lon);
+            expect(myDist).to.deep.equal(args.query.filtered.filter.geo_distance.distance);
+            done();
+             
+         });
+      });
 });
 
