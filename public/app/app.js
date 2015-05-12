@@ -2,5 +2,5 @@
 (function () {
     'use strict';
 
-    angular.module('app', ['ngResource', 'angucomplete-alt']);
+    angular.module('app', ['ngResource', 'ngRoute', 'angucomplete-alt']);
 }());

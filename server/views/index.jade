@@ -9,35 +9,21 @@ html(lang="en-us")
         link(rel='stylesheet', href='/lib/angucomplete-alt/angucomplete-alt.css')
         title Compare Hospital Costs
     body(data-ng-app='app')
-        section.jumbotron
-            header.container
+        header.container(data-ng-controller="HeaderController")
+            nav(class="navbar navbar-default navbar-fixed-top")
+                ul.nav.navbar-nav(data-ng-cloak="data-ng-cloak")
+                    li(data-ng-repeat="route in routeData" data-ng-class="{'active':$location.path() === route.path}")
+                        a(data-ng-href="#{{route.path}}") {{route.title}}
+            section.jumbotron
                 h1 Should You Move There?
-                h2 Compare Hospital Costs
-        main.container(data-ng-controller='HealthcareCompareController' role="main")
-            section.row
-                .col-xs-8.col-xs-offset-2
-                    form.well.clearfix(data-ng-submit="submit()" autocomplete="off")
-                        input(type="hidden" name="_csrf" value=csrfToken)
-                        fieldset(data-id="live-now" data-input-state-city="data-input-state-city" data-city="city_name_here" data-state="state_abbr_here")
-                            legend.col-xs-12 Where do you live now?
-                        fieldset(data-id="move-to" data-input-state-city="data-input-state-city" data-city="city_name_there" data-state="state_abbr_there")
-                            legend.col-xs-12 Where do you want to move?
-                        div.col-xs-12.form-actions
-                            button.btn.btn-primary(type="submit" data-ng-disabled="!canSubmit()") Get Results
+                h2(data-ng-cloak="data-ng-cloak") {{pagetitle}}
 
-            section.row
-                div.col-xs-8.col-xs-offset-2
-                    status(data-status-message="statusMessage" data-status-type="statusType")
-
-            section.row
-                #results.col-xs-8.col-xs-offset-2(data-ng-repeat="result in searchResults" data-compare-chart="data-compare-chart" data-compare-data="result")
-
-
-            
+        main.container(data-ng-view="data-ng-view" role="main")            
 
     script(src='/scripts/jquery/dist/jquery.min.js')
     script(src='/scripts/angular/angular.js')
     script(src='/scripts/angular-resource/angular-resource.js')
+    script(src='/scripts/angular-route/angular-route.js')
     script(src='/scripts/highcharts-release/highcharts.js')
     script(src='/lib/angucomplete-alt/angucomplete-alt.min.js')
     script(src='/app/app.js')
