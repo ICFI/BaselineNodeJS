@@ -39,14 +39,14 @@ app.use(session({
 // Implement CSP with Helmet
 app.use(helmet.csp({
   defaultSrc: ["'self'"],
-  scriptSrc: ["'unsafe-eval'", "'unsafe-inline'", "'self'", '*.google-analytics.com', '*.cloudfront.net'],
-  styleSrc: ["'unsafe-inline'", "'self'"],
-  imgSrc: ["'self'",'*.google-analytics.com', '*.cloudfront.net'],
+  scriptSrc: ["'unsafe-eval'", "'unsafe-inline'", "'self'", '*.google-analytics.com', '*.googleapis.com', '*.gstatic.com', '*.cloudfront.net'],
+  styleSrc: ["'unsafe-inline'", "'self'", '*.googleapis.com', '*.gstatic.com'],
+  imgSrc: ["'self'", '*.google-analytics.com', '*.googleapis.com', '*.gstatic.com', '*.google.com', '*.cloudfront.net'],
   connectSrc: ["'self'"],
-  fontSrc: ["'self'"],
+  fontSrc: ["'self'", '*.gstatic.com'],
   objectSrc: [],
   mediaSrc: [],
-  frameSrc: []
+  frameSrc: ['*.google.com']
 }));
 
 //Implement CSRF protection

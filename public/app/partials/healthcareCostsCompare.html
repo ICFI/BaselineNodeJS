@@ -1,0 +1,29 @@
+<section class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+        <form class="well clearfix" data-ng-submit="submit()" autocomplete="off">
+            <input type="hidden" name="_csrf" value="csrfToken" />
+
+            <fieldset data-id="live-now" data-input-state-city="data-input-state-city" data-city="city_name_here" data-state="state_abbr_here">
+                <legend class="col-xs-12">Where do you live now?</legend>
+            </fieldset>
+
+            <fieldset data-id="move-to" data-input-state-city="data-input-state-city" data-city="city_name_there" data-state="state_abbr_there">
+                <legend class="col-xs-12">Where do you want to move?</legend>
+            </fieldset>
+
+            <div class="col-xs-12 form-actions">
+                <button class="btn btn-primary" type="submit" data-ng-disabled="!canSubmit()">Get Results</button>
+            </div>
+        </form>
+    </div>
+
+    <section class="row">
+        <div class="col-xs-8.col-xs-offset-2">
+            <status data-status-message="statusMessage" data-status-type="statusType"></status>
+        </div>
+    </section>
+
+    <section class="row">
+        <div id="results" class="col-xs-8 col-xs-offset-2" data-ng-repeat="result in searchResults" data-compare-chart="data-compare-chart" data-compare-data="result"></div>
+    </section>
+</section>

@@ -4,7 +4,7 @@ describe("posting demo data", function () {
     var postRequest,
         newData = {title: 'New Item', description: 'This is a shiny new item'};
 
-    beforeEach(module('app'));
+    beforeEach(module('app', ['ngRoute']));
 
     it("should be true", function () {
         expect(true).to.equal(true);

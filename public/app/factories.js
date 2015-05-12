@@ -32,6 +32,64 @@
             };
         },
 
+        healthcareProviders = function ($http, $q, dataPaths) {
+            var formatGetPath = function (params) {
+                    return dataPaths.heathcareProviders
+                           + params.latitude + '/'
+                           + params.longitude + '/'
+                           + params.radius;
+                },
+
+                get = function (params) {
+                    var deferred = $q.defer();
+
+                    $http({
+                        'method': 'GET',
+                        'url'   : formatGetPath(params)
+                    }).success(function (data) {
+                        if (data.length) {
+                            deferred.resolve(data);
+                        } else {
+                            deferred.reject('No providers found. Try increasing distance.');
+                        }
+                    }).error(function () {
+                        deferred.reject('There were no results.');
+                    });
+
+                    return deferred.promise;
+                };
+
+            return {
+                get : get
+            };
+        },
+
+        geolocate = function ($q, $window) {
+            var get = function () {
+                    var deferred = $q.defer(),
+
+                        options = {
+                            maximumAge         : 15000,
+                            timeout            : 15000,
+                            enableHighAccuracy : false
+                        },
+
+                        success = function (data) {
+                            deferred.resolve(data);
+                        },
+
+                        error = function () {
+                            deferred.reject('There was a problem finding your location.');
+                        };
+
+                    $window.navigator.geolocation.getCurrentPosition(success, error, options);
+
+                    return deferred.promise;
+                };
+
+            return get;
+        },
+
         stateCities = function ($http, $q, dataPaths) {
             var states = [
                     {
@@ -308,5 +366,7 @@
         };
 
     angular.module('app').factory('hospitalCosts', ['$http', '$q', 'dataPaths', hospitalCosts])
-                                  .factory('stateCities', ['$http', '$q', 'dataPaths', stateCities]);
+                         .factory('healthcareProviders', ['$http', '$q', 'dataPaths', healthcareProviders])
+                         .factory('geolocate', ['$q', '$window', geolocate])
+                         .factory('stateCities', ['$http', '$q', 'dataPaths', stateCities]);
 }());
