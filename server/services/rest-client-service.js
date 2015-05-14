@@ -118,8 +118,7 @@ module.exports = function(searchProxy, app) {
         });
     });
     
-    //PASTE HERE  app.get...
-        app.get('/api/v1/hospitals/:lat/:lon/:dist', function(req, res) {
+    app.get('/api/v1/hospitals/:lat/:lon/:dist', function(req, res) {
       var elasticTemplate = new ElasticSearchQuery();
       var args = elasticTemplate.getGeoQuery();
       args.query.filtered.filter.geo_distance.location.lat=parseFloat(req.params.lat);
