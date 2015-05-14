@@ -279,7 +279,7 @@ describe("The Elastic Search REST client service wrapper", function() {
             var elasticTemplate = new ElasticSearchQuery();
             var args = elasticTemplate.getGeoQuery();
             //ARZ HERE
-            args.query.filtered.filter.geo_distance.location.lat.bad=myLat;
+            args.query.filtered.filter.geo_distance.location.lat=myLat;
             args.query.filtered.filter.geo_distance.location.lon=myLon;
             args.query.filtered.filter.geo_distance.distance=myDist;
             

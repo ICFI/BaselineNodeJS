@@ -67,7 +67,6 @@ exports.parseHospitalSearchResults = function(cityrecords){
     });
 };
 
-//exports.parseHospitalGeoRecords PASTE HERE
 exports.parseHospitalGeoRecords = function(results){
 
   var hospitals = [];
