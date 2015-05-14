@@ -2,13 +2,23 @@
 
 (function () {
     'use strict';
-    var asyncGoogleMap = function () {
-            var script = document.createElement('script');
+    var asyncGoogleMap = function (mapReady) {
+            if (window.google === undefined || window.google.maps === undefined) {
+                var script = document.createElement('script');
 
-            script.type = 'text/javascript';
-            script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&callback=initialize';
+                window.initialize = function () {
+                    mapReady.resolve();
+                };
 
-            document.body.appendChild(script);
+                script.type = 'text/javascript';
+                script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&callback=initialize';
+
+                document.body.appendChild(script);
+            } else {
+                mapReady.resolve();
+            }
+
+            return mapReady.promise;
         },
 
         inputStateCity = function (stateCities) {
@@ -74,6 +84,40 @@
             };
         },
 
+        barChart = function () {
+            return {
+                restrict    : 'A',
+                replace     : false,
+                transclude  : true,
+                scope       : {
+                    'compareData' : '='
+                },
+                template : '<div id="chart"></div>',
+                link : function (scope) {
+                    $('#chart').highcharts({
+                        chart: {
+                            type: 'bar'
+                        },
+                        title: {
+                            text: 'Cost Results'
+                        },
+                        xAxis: {
+                            categories: ['Here', 'There', 'National Average']
+                        },
+                        yAxis: {
+                            title: {
+                                text: ''
+                            }
+                        },
+                        series: [{
+                            name: 'Costs',
+                            data: [parseInt(scope.compareData.average_cost_here, 10), parseInt(scope.compareData.average_cost_there, 10), parseInt(scope.compareData.average_cost_nation, 10)]
+                        }]
+                    });
+                }
+            };
+        },
+
         status = function () {
             return {
                 restrict    : 'E',
@@ -98,11 +142,13 @@
                     longitude  : '='
                 },
                 compile     : function (tElem, tAttrs) {
-                    var map,
+                    var mapReady = $q.defer(),
 
-                        mapReady = $q.defer(),
+                        map,
 
                         markers = [],
+
+                        infoWindow,
 
                         clearMarkers = function () {
                             angular.forEach(markers, function (marker) {
@@ -113,18 +159,18 @@
                             markers.length = 0;
                         };
 
-                    asyncGoogleMap();
+                    asyncGoogleMap(mapReady).then(
+                        function () {
+                            var mapOptions = {
+                                    zoom   : 8,
+                                    center : new google.maps.LatLng(-34.397, 150.644)
+                                };
 
-                    window.initialize = function () {
-                        var mapOptions = {
-                                zoom   : 8,
-                                center : new google.maps.LatLng(-34.397, 150.644)
-                            };
+                            map = new google.maps.Map(tElem[0], mapOptions);
 
-                        map = new google.maps.Map(tElem[0], mapOptions);
-
-                        mapReady.resolve();
-                    };
+                            infoWindow = new google.maps.InfoWindow();
+                        }
+                    );
 
                     return function link(scope, iElem, iAttrs) {
                         scope.$watch('markerData', function (newMarkers) {
@@ -133,14 +179,25 @@
 
                                 if (scope.latitude !== null && scope.longitude !== null) {
                                     map.panTo(new google.maps.LatLng(scope.latitude, scope.longitude));
-                                    console.log('panTo');
                                 }
 
                                 angular.forEach(newMarkers, function (marker) {
                                     var m = new google.maps.Marker({
-                                        position : new google.maps.LatLng(marker.lat, marker.lon),
-                                        map      : map,
-                                        title    : marker.name
+                                            position : new google.maps.LatLng(marker.lat, marker.lon),
+                                            map      : map,
+                                            title    : marker.name
+                                        }),
+
+                                        infoWindowContent = '<dl>'
+                                            + '<dt>Provider Name</dt>'
+                                            + '<dd>' + marker.name + '</dd>'
+                                            + '<dt>Provider Type</dt>'
+                                            + '<dd>' + marker.type + '</dd>'
+                                            + '</dl>';
+
+                                    google.maps.event.addListener(m, 'click', function () {
+                                        infoWindow.setContent(infoWindowContent);
+                                        infoWindow.open(map, m);
                                     });
 
                                     m.setMap(map);
@@ -156,6 +213,7 @@
 
     angular.module('app').directive('inputStateCity', ['stateCities', inputStateCity])
                          .directive('compareChart', [compareChart])
+                         .directive('barChart', [barChart])
                          .directive('googleMap', ['$q', googleMap])
                          .directive('status', [status]);
 }());

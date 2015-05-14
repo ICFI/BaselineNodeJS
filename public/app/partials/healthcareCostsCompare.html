@@ -1,5 +1,5 @@
 <section class="row">
-    <div class="col-xs-8 col-xs-offset-2">
+    <div class="col-sm-8 col-sm-offset-2">
         <form class="well clearfix" data-ng-submit="submit()" autocomplete="off">
             <input type="hidden" name="_csrf" value="csrfToken" />
 
@@ -18,12 +18,12 @@
     </div>
 
     <section class="row">
-        <div class="col-xs-8.col-xs-offset-2">
+        <div class="col-sm-8 col-sm-offset-2">
             <status data-status-message="statusMessage" data-status-type="statusType"></status>
         </div>
     </section>
 
     <section class="row">
-        <div id="results" class="col-xs-8 col-xs-offset-2" data-ng-repeat="result in searchResults" data-compare-chart="data-compare-chart" data-compare-data="result"></div>
+        <div id="results" class="col-sm-8 col-sm-offset-2" data-ng-repeat="result in searchResults" data-compare-chart="data-compare-chart" data-compare-data="result"></div>
     </section>
 </section>
