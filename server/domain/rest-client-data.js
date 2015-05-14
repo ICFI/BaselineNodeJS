@@ -67,35 +67,8 @@ exports.parseHospitalSearchResults = function(cityrecords){
     });
 };
 
-exports.parseHospitalGeoRecords = function(results){
+//exports.parseHospitalGeoRecords PASTE HERE
 
-  var hospitals = [];
-  var localResult = JSON.parse(results);
-  var resultSet = localResult.hits.hits;
-  
-  
-  return new Promise(function(resolve, reject){
-    try{ 
-      for(var n in resultSet){
-        var hospitalRecord = {};
-        var curFacility = resultSet[n];
-        hospitalRecord.type = curFacility._type;
-        hospitalRecord.city = curFacility.fields.provider_city[0];
-        hospitalRecord.state = curFacility.fields.provider_state[0];
-        hospitalRecord.name = curFacility.fields.provider_name[0];
-        hospitalRecord.lat = curFacility.fields.lat[0];
-        hospitalRecord.lon = curFacility.fields.lon[0];
-        //console.log("adding hospital record to array: " + hospitalRecord);
-        hospitals[n] = hospitalRecord;
-      }  
-      resolve(hospitals);
-    } 
-    catch (e) {
-      // reject the promise with caught error
-      reject(e);
-    } 
-  });
-};
 
 //set collection to search
 exports.setLocations = function(params){
