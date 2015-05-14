@@ -219,7 +219,7 @@ describe("The Elastic Search API Interface", function() {
              
             var elasticTemplate = new ElasticSearchQuery();
             var args = elasticTemplate.getGeoQuery();
-            //args.query.filtered.filter.geo_distance.location.lat.bad=myLat;
+           // args.query.filtered.filter.geo_distance.location.lat.bad=myLat;
             //TEST HERE
             args.query.filtered.filter.geo_distance.location.lat=myLat;
             args.query.filtered.filter.geo_distance.location.lon=myLon;
