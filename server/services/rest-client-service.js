@@ -119,4 +119,16 @@ module.exports = function(searchProxy, app) {
     });
     
     //PASTE HERE  app.get...
+        app.get('/api/v1/hospitals/:lat/:lon/:dist', function(req, res) {
+      var elasticTemplate = new ElasticSearchQuery();
+      var args = elasticTemplate.getGeoQuery();
+      args.query.filtered.filter.geo_distance.location.lat=parseFloat(req.params.lat);
+      args.query.filtered.filter.geo_distance.location.lon=parseFloat(req.params.lon);
+      args.query.filtered.filter.geo_distance.distance=req.params.dist;
+      searchProxy.doSearch("https://18f-3263339722.us-east-1.bonsai.io/health-geo/_search", args)
+      .then(searchProxy.parseHospitalGeoRecords)
+      .then(function(collection){
+        res.send(collection);
+      });            
+    });
 };

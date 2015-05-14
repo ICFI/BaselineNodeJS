@@ -290,5 +290,6 @@ describe("The Elastic Search REST client service wrapper", function() {
          });
       });
       
+      
 });
 
