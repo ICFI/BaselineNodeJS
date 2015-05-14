@@ -8,3 +8,5 @@ instance replacing Heroku as the app server.
 
 Integrated CodeShip. Testing build
 Integrated CodeShip continuous deployment with Heroku.
+
+Demo for leadership
