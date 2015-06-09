@@ -209,25 +209,30 @@ describe("The Elastic Search API Interface", function() {
       
     //PASTE describe("The geospatial query", function(){
          describe("The geospatial query", function(){
-         it("should be able to create an instance of the query and populate values", function(done){
+         it("should be able to create an instance of the query and populate known values", function(done){
              //29.9574629,-90.0629541
              //distance 10mi
              
              var myLat = '29.9574629';
              var myLon = '-90.0629541';
              var myDist = '10mi';
+             try{
+                 
              
-            var elasticTemplate = new ElasticSearchQuery();
-            var args = elasticTemplate.getGeoQuery();
-            //args.query.filtered.filter.geo_distance.location.lat.bad=myLat;
-            //TEST HERE
-            args.query.filtered.filter.geo_distance.location.lat=myLat;
-            args.query.filtered.filter.geo_distance.location.lon=myLon;
-            args.query.filtered.filter.geo_distance.distance=myDist;
-            expect(myLat).to.deep.equal(args.query.filtered.filter.geo_distance.location.lat);
-            expect(myLon).to.deep.equal(args.query.filtered.filter.geo_distance.location.lon);
-            expect(myDist).to.deep.equal(args.query.filtered.filter.geo_distance.distance);
-            done();
+                var elasticTemplate = new ElasticSearchQuery();
+                var args = elasticTemplate.getGeoQuery();
+                //args.query.filtered.filter.geo_distance.location.lat.bad=myLat;
+                //TEST HERE
+                args.query.filtered.filter.geo_distance.location.lat=myLat;
+                args.query.filtered.filter.geo_distance.location.lon=myLon;
+                args.query.filtered.filter.geo_distance.distance=myDist;
+                expect(myLat).to.deep.equal(args.query.filtered.filter.geo_distance.location.lat);
+                expect(myLon).to.deep.equal(args.query.filtered.filter.geo_distance.location.lon);
+                expect(myDist).to.deep.equal(args.query.filtered.filter.geo_distance.distance);
+                done();
+            }catch(e){
+                console.error("Exception: " + e);
+            }
          });
          
          it("should be able to execute the query and return a list of facilities within the geo boundaries specified", function(done){
